@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ADHD Reader</title>
+    <link rel="stylesheet" href="../ui/ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="head">
+        <img src="../../icons/icon48.png" width="40" height="40" alt="" />
+        <div>
+          <h1 data-i18n="extName">ADHD Reader</h1>
+          <p class="muted" data-i18n="optionsSubtitle"></p>
+        </div>
+      </header>
+
+      <section class="card row">
+        <div>
+          <h2 data-i18n="enabledLabel">Enabled</h2>
+          <p class="hint" data-i18n="enabledHint"></p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" data-setting="enabled" data-i18n-aria-label="enabledLabel" />
+          <span></span>
+        </label>
+      </section>
+
+      <div class="columns">
+        <section class="card">
+          <h2 data-i18n="sectionReading">Reading</h2>
+
+          <label class="control">
+            <span data-i18n="fixationLabel">Bold part of each word</span>
+            <output data-output="fixation"></output>
+            <input type="range" min="10" max="90" step="5" data-setting="fixation" />
+            <p class="hint" data-i18n="fixationHint"></p>
+          </label>
+
+          <div class="control">
+            <span data-i18n="weightLabel">Boldness</span>
+            <div class="segmented" role="radiogroup" data-i18n-aria-label="weightLabel">
+              <label data-i18n-title="weight500"><input type="radio" name="weight" value="500" data-setting="weight" /><span style="font-weight: 500">Aa</span></label>
+              <label data-i18n-title="weight600"><input type="radio" name="weight" value="600" data-setting="weight" /><span style="font-weight: 600">Aa</span></label>
+              <label data-i18n-title="weight700"><input type="radio" name="weight" value="700" data-setting="weight" /><span style="font-weight: 700">Aa</span></label>
+              <label data-i18n-title="weight800"><input type="radio" name="weight" value="800" data-setting="weight" /><span style="font-weight: 800">Aa</span></label>
+            </div>
+          </div>
+
+          <label class="control">
+            <span data-i18n="fadeLabel">Rest of the word</span>
+            <output data-output="fade"></output>
+            <input type="range" min="20" max="100" step="5" data-setting="fade" />
+            <p class="hint" data-i18n="fadeHint"></p>
+          </label>
+
+          <label class="control check">
+            <span data-i18n="skipCodeLabel">Skip code</span>
+            <input type="checkbox" data-setting="skipCode" />
+            <p class="hint" data-i18n="skipCodeHint"></p>
+          </label>
+        </section>
+
+        <section class="card preview" id="preview" aria-live="polite"></section>
+      </div>
+
+      <section class="card">
+        <h2 data-i18n="sectionSites">Sites where it's off</h2>
+        <p class="hint" data-i18n="sitesHint"></p>
+        <textarea id="sites" rows="6" spellcheck="false" data-i18n-placeholder="sitesPlaceholder"></textarea>
+        <div class="actions">
+          <button type="button" class="button primary" id="save-sites" data-i18n="saveSites">Save</button>
+          <span class="muted" id="sites-status" role="status"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="shortcutsLabel">Keyboard shortcuts</h2>
+        <ul class="shortcuts" id="shortcuts"></ul>
+        <button type="button" class="link-button" id="open-shortcuts" data-i18n="openShortcuts">Change shortcuts</button>
+      </section>
+
+      <footer class="foot">
+        <button type="button" class="button" id="reset" data-i18n="resetDefaults">Reset to defaults</button>
+        <span class="muted" data-i18n="aboutText"></span>
+      </footer>
+    </div>
+
+    <script src="../shared/settings.js"></script>
+    <script src="../content/bionic.js"></script>
+    <script src="../ui/ui.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

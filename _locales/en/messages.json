@@ -1,0 +1,142 @@
+{
+  "extName": {
+    "message": "ADHD Reader"
+  },
+  "extDescription": {
+    "message": "Bold word beginnings (bionic-style reading) on every website, including dynamic pages, shadow DOM and frames."
+  },
+  "actionTitle": {
+    "message": "ADHD Reader"
+  },
+  "cmdToggleSite": {
+    "message": "Turn on/off on the current site"
+  },
+  "cmdToggleGlobal": {
+    "message": "Turn on/off everywhere"
+  },
+  "badgeOff": {
+    "message": "off"
+  },
+  "globalToggleTitle": {
+    "message": "On for all sites"
+  },
+  "thisSite": {
+    "message": "On this site"
+  },
+  "localFiles": {
+    "message": "Local files"
+  },
+  "fixationLabel": {
+    "message": "Bold part of each word"
+  },
+  "fixationHint": {
+    "message": "Share of the letters at the start of each word that are made bold."
+  },
+  "weightLabel": {
+    "message": "Boldness"
+  },
+  "weight500": {
+    "message": "Medium"
+  },
+  "weight600": {
+    "message": "Semibold"
+  },
+  "weight700": {
+    "message": "Bold"
+  },
+  "weight800": {
+    "message": "Extra bold"
+  },
+  "fadeLabel": {
+    "message": "Rest of the word"
+  },
+  "fadeHint": {
+    "message": "Make the rest of each word lighter so the bold start stands out more."
+  },
+  "fadeOff": {
+    "message": "normal"
+  },
+  "skipCodeLabel": {
+    "message": "Leave code alone"
+  },
+  "skipCodeHint": {
+    "message": "Don't change text inside code blocks, code editors and terminals."
+  },
+  "previewText": {
+    "message": "Bionic reading guides your eyes through the text: the bold start of each word is enough for the brain to recognise it, so reading feels lighter and focus drifts less."
+  },
+  "previewTextLong": {
+    "message": "Bionic reading guides your eyes through the text: the bold start of each word is enough for the brain to recognise it, so reading feels lighter and focus drifts less.\n\nTry different settings and see what is comfortable for you. A larger bold part gives more support; a lighter rest of the word adds contrast."
+  },
+  "moreSettings": {
+    "message": "All settings"
+  },
+  "shortcutHint": {
+    "message": "$SHORTCUT$ — toggle on this site",
+    "placeholders": {
+      "shortcut": {
+        "content": "$1"
+      }
+    }
+  },
+  "noticeRestricted": {
+    "message": "Chrome doesn't allow extensions on this page."
+  },
+  "noticeFileAccess": {
+    "message": "To use it on local files, enable “Allow access to file URLs” for ADHD Reader in chrome://extensions."
+  },
+  "noticePdf": {
+    "message": "PDF files open in Chrome's built-in viewer, which extensions can't change yet."
+  },
+  "noticeReload": {
+    "message": "Reload the page to activate ADHD Reader here."
+  },
+  "reloadPage": {
+    "message": "Reload"
+  },
+  "optionsSubtitle": {
+    "message": "Bionic-style reading on every website"
+  },
+  "enabledLabel": {
+    "message": "Enabled"
+  },
+  "enabledHint": {
+    "message": "Main switch for all sites. You can also turn it off for individual sites below or from the toolbar popup."
+  },
+  "sectionReading": {
+    "message": "Reading"
+  },
+  "sectionSites": {
+    "message": "Sites where it's off"
+  },
+  "sitesHint": {
+    "message": "One site per line. A domain also covers its subdomains: example.com turns it off on news.example.com too."
+  },
+  "sitesPlaceholder": {
+    "message": "example.com\nmail.google.com"
+  },
+  "saveSites": {
+    "message": "Save"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "shortcutsLabel": {
+    "message": "Keyboard shortcuts"
+  },
+  "shortcutNotSet": {
+    "message": "not set"
+  },
+  "openShortcuts": {
+    "message": "Change shortcuts"
+  },
+  "resetDefaults": {
+    "message": "Reset to defaults"
+  },
+  "resetConfirm": {
+    "message": "Reset all settings, including the list of sites where it's off?"
+  },
+  "aboutText": {
+    "message": "Settings are synced through your Chrome profile."
+  }
+}

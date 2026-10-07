@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ADHD Reader — React test page</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/node_modules/react/umd/react.production.min.js"></script>
+    <script src="/node_modules/react-dom/umd/react-dom.production.min.js"></script>
+    <script>
+      const e = React.createElement;
+      function App() {
+        const [count, setCount] = React.useState(0);
+        const [items, setItems] = React.useState(['First item text', 'Second item text']);
+        const [show, setShow] = React.useState(true);
+        return e(
+          'div',
+          null,
+          e('p', { id: 'status' }, count % 2 ? 'Odd number of clicks' : 'Even number of clicks'),
+          e('p', { id: 'count' }, 'Clicked ', count, ' times so far'),
+          e('button', { id: 'inc', onClick: () => setCount((c) => c + 1) }, 'Increment'),
+          e('button', { id: 'add', onClick: () => setItems((i) => ['New entry number ' + i.length, ...i]) }, 'Add item'),
+          e('button', { id: 'remove', onClick: () => setItems((i) => i.slice(1)) }, 'Remove item'),
+          e('button', { id: 'toggle', onClick: () => setShow((s) => !s) }, 'Toggle words'),
+          e('ul', { id: 'list' }, items.map((text) => e('li', { key: text }, text))),
+          e('p', { id: 'cond' }, 'Before ', show ? 'conditional words' : null, ' after'),
+          e('p', { id: 'label' }, 'Label: ', show ? 'shown state' : 'hidden state'),
+        );
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+    </script>
+  </body>
+</html>

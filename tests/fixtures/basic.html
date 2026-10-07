@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ADHD Reader — test page</title>
+    <style>
+      body { font: 18px/1.6 system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+      .stack > * { display: block; }
+      :not(:defined) { visibility: hidden; }
+    </style>
+  </head>
+  <body>
+    <main id="static">
+      <h1>Reading test page</h1>
+      <p id="plain">Bionic reading helps the eyes move through text. Привет, это русский текст для проверки.</p>
+      <p id="mixed">Text with <a href="/relative/link">a relative link</a> and <em>emphasis</em> inside.</p>
+      <div class="stack" id="stack">Direct text in a stack <span>and a span</span></div>
+      <pre id="pre">const code = "do not touch";</pre>
+      <p>Inline <code id="code">codeSample</code> stays.</p>
+      <textarea id="textarea">Text area content</textarea>
+      <div id="editable" contenteditable="true">Editable content here</div>
+      <p id="cjk">漢字テキスト</p>
+    </main>
+
+    <open-box id="open-box"></open-box>
+    <closed-box id="closed-box"></closed-box>
+    <late-box id="late-box"></late-box>
+
+    <iframe id="frame" srcdoc="<p id='inner'>Frame content should be bold too</p>"></iframe>
+
+    <section id="dynamic">
+      <p id="counter">Count zero</p>
+      <p id="removable">Removable words here</p>
+      <p id="target">Middle text</p>
+    </section>
+
+    <script>
+      window.__originalHTML = document.getElementById('static').innerHTML;
+      // Keep references to text nodes the way frameworks do.
+      window.__counterText = document.getElementById('counter').firstChild;
+      window.__removableText = document.getElementById('removable').firstChild;
+      window.__targetText = document.getElementById('target').firstChild;
+
+      customElements.define('open-box', class extends HTMLElement {
+        constructor() {
+          super();
+          this.attachShadow({ mode: 'open' }).innerHTML = '<p>Open shadow words</p>';
+        }
+      });
+      customElements.define('closed-box', class extends HTMLElement {
+        constructor() {
+          super();
+          const root = this.attachShadow({ mode: 'closed' });
+          root.innerHTML = '<p>Closed shadow words</p>';
+          window.__closedRoot = root;
+        }
+      });
+      window.defineLateBox = () =>
+        customElements.define('late-box', class extends HTMLElement {
+          constructor() {
+            super();
+            const root = this.attachShadow({ mode: 'closed' });
+            root.innerHTML = '<p>Late shadow words</p>';
+            window.__lateRoot = root;
+          }
+        });
+    </script>
+  </body>
+</html>

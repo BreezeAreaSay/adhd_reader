@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ADHD Reader — large page</title>
+  </head>
+  <body>
+    <main id="main"></main>
+    <script>
+      const words = 'reading focus attention paragraph sentence чтение внимание текст страница слово'.split(' ');
+      const main = document.getElementById('main');
+      for (let p = 0; p < 2000; p++) {
+        const el = document.createElement('p');
+        let text = '';
+        for (let w = 0; w < 25; w++) text += words[(p * 7 + w * 3) % words.length] + ' ';
+        el.textContent = text;
+        main.appendChild(el);
+      }
+    </script>
+  </body>
+</html>

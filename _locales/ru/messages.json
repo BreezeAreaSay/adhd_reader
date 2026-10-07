@@ -1,0 +1,142 @@
+{
+  "extName": {
+    "message": "ADHD Reader"
+  },
+  "extDescription": {
+    "message": "Выделяет начала слов жирным (бионическое чтение) на любом сайте — включая динамические страницы, Shadow DOM и фреймы."
+  },
+  "actionTitle": {
+    "message": "ADHD Reader"
+  },
+  "cmdToggleSite": {
+    "message": "Включить/выключить на текущем сайте"
+  },
+  "cmdToggleGlobal": {
+    "message": "Включить/выключить везде"
+  },
+  "badgeOff": {
+    "message": "выкл"
+  },
+  "globalToggleTitle": {
+    "message": "Включено на всех сайтах"
+  },
+  "thisSite": {
+    "message": "На этом сайте"
+  },
+  "localFiles": {
+    "message": "Локальные файлы"
+  },
+  "fixationLabel": {
+    "message": "Жирная часть слова"
+  },
+  "fixationHint": {
+    "message": "Какая доля букв в начале каждого слова выделяется жирным."
+  },
+  "weightLabel": {
+    "message": "Насыщенность"
+  },
+  "weight500": {
+    "message": "Средняя"
+  },
+  "weight600": {
+    "message": "Полужирная"
+  },
+  "weight700": {
+    "message": "Жирная"
+  },
+  "weight800": {
+    "message": "Очень жирная"
+  },
+  "fadeLabel": {
+    "message": "Остаток слова"
+  },
+  "fadeHint": {
+    "message": "Сделать остаток слова светлее, чтобы жирное начало сильнее выделялось."
+  },
+  "fadeOff": {
+    "message": "обычный"
+  },
+  "skipCodeLabel": {
+    "message": "Не трогать код"
+  },
+  "skipCodeHint": {
+    "message": "Не менять текст в блоках кода, редакторах кода и терминалах."
+  },
+  "previewText": {
+    "message": "Бионическое чтение ведёт взгляд по тексту: мозгу достаточно жирного начала слова, чтобы его узнать, поэтому читать легче, а внимание реже уплывает."
+  },
+  "previewTextLong": {
+    "message": "Бионическое чтение ведёт взгляд по тексту: мозгу достаточно жирного начала слова, чтобы его узнать, поэтому читать легче, а внимание реже уплывает.\n\nПопробуйте разные настройки и найдите удобные для себя. Чем больше жирная часть, тем больше опоры для глаз; более светлый остаток слова добавляет контраста."
+  },
+  "moreSettings": {
+    "message": "Все настройки"
+  },
+  "shortcutHint": {
+    "message": "$SHORTCUT$ — вкл/выкл на этом сайте",
+    "placeholders": {
+      "shortcut": {
+        "content": "$1"
+      }
+    }
+  },
+  "noticeRestricted": {
+    "message": "Chrome не разрешает расширениям работать на этой странице."
+  },
+  "noticeFileAccess": {
+    "message": "Чтобы работать с локальными файлами, включите «Разрешить доступ к URL файлов» для ADHD Reader на странице chrome://extensions."
+  },
+  "noticePdf": {
+    "message": "PDF открываются во встроенном просмотрщике Chrome, который расширения пока не могут менять."
+  },
+  "noticeReload": {
+    "message": "Перезагрузите страницу, чтобы ADHD Reader заработал здесь."
+  },
+  "reloadPage": {
+    "message": "Перезагрузить"
+  },
+  "optionsSubtitle": {
+    "message": "Бионическое чтение на любом сайте"
+  },
+  "enabledLabel": {
+    "message": "Включено"
+  },
+  "enabledHint": {
+    "message": "Главный переключатель для всех сайтов. Отдельные сайты можно выключить ниже или во всплывающем окне на панели."
+  },
+  "sectionReading": {
+    "message": "Чтение"
+  },
+  "sectionSites": {
+    "message": "Сайты, где выключено"
+  },
+  "sitesHint": {
+    "message": "По одному сайту на строку. Домен включает и поддомены: example.com выключит и news.example.com."
+  },
+  "sitesPlaceholder": {
+    "message": "example.com\nmail.google.com"
+  },
+  "saveSites": {
+    "message": "Сохранить"
+  },
+  "saved": {
+    "message": "Сохранено"
+  },
+  "shortcutsLabel": {
+    "message": "Горячие клавиши"
+  },
+  "shortcutNotSet": {
+    "message": "не назначено"
+  },
+  "openShortcuts": {
+    "message": "Изменить сочетания клавиш"
+  },
+  "resetDefaults": {
+    "message": "Сбросить настройки"
+  },
+  "resetConfirm": {
+    "message": "Сбросить все настройки, включая список сайтов, где расширение выключено?"
+  },
+  "aboutText": {
+    "message": "Настройки синхронизируются через ваш профиль Chrome."
+  }
+}

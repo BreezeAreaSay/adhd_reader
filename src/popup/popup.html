@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ADHD Reader</title>
+    <link rel="stylesheet" href="../ui/ui.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="head">
+      <img src="../../icons/icon32.png" width="22" height="22" alt="" />
+      <h1 data-i18n="extName">ADHD Reader</h1>
+      <label class="switch" data-i18n-title="globalToggleTitle">
+        <input type="checkbox" data-setting="enabled" data-i18n-aria-label="globalToggleTitle" />
+        <span></span>
+      </label>
+    </header>
+
+    <main>
+      <section class="card site">
+        <div class="site-text">
+          <div class="muted" data-i18n="thisSite">This site</div>
+          <div class="site-host" id="site-host">—</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="site-toggle" data-i18n-aria-label="thisSite" />
+          <span></span>
+        </label>
+      </section>
+
+      <p class="notice" id="notice" hidden>
+        <span id="notice-text"></span>
+        <button type="button" class="link-button" id="reload" hidden data-i18n="reloadPage">Reload</button>
+      </p>
+
+      <section class="card preview" id="preview" aria-live="polite"></section>
+
+      <section class="card">
+        <label class="control">
+          <span data-i18n="fixationLabel">Bold part of each word</span>
+          <output data-output="fixation"></output>
+          <input type="range" min="10" max="90" step="5" data-setting="fixation" />
+        </label>
+
+        <div class="control">
+          <span data-i18n="weightLabel">Boldness</span>
+          <div class="segmented" role="radiogroup" data-i18n-aria-label="weightLabel">
+            <label data-i18n-title="weight500"><input type="radio" name="weight" value="500" data-setting="weight" /><span style="font-weight: 500">Aa</span></label>
+            <label data-i18n-title="weight600"><input type="radio" name="weight" value="600" data-setting="weight" /><span style="font-weight: 600">Aa</span></label>
+            <label data-i18n-title="weight700"><input type="radio" name="weight" value="700" data-setting="weight" /><span style="font-weight: 700">Aa</span></label>
+            <label data-i18n-title="weight800"><input type="radio" name="weight" value="800" data-setting="weight" /><span style="font-weight: 800">Aa</span></label>
+          </div>
+        </div>
+
+        <label class="control">
+          <span data-i18n="fadeLabel">Rest of the word</span>
+          <output data-output="fade"></output>
+          <input type="range" min="20" max="100" step="5" data-setting="fade" />
+        </label>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="muted" id="shortcut"></span>
+      <button type="button" class="link-button" id="open-options" data-i18n="moreSettings">All settings</button>
+    </footer>
+
+    <script src="../shared/settings.js"></script>
+    <script src="../content/bionic.js"></script>
+    <script src="../ui/ui.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
