@@ -36,6 +36,9 @@
     if (confirm(t('resetConfirm'))) await ADHDR.resetSettings();
   });
 
+  document.getElementById('open-viewer').addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html') });
+  });
   document.getElementById('open-shortcuts').addEventListener('click', () => {
     chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
   });

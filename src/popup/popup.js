@@ -16,7 +16,8 @@
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const siteKey = ADHDR.siteKeyFromUrl(tab?.url);
-  siteHost.textContent = siteKey === 'file://' ? t('localFiles') : siteKey || '—';
+  const ownPage = Boolean(tab?.url?.startsWith(chrome.runtime.getURL('')));
+  siteHost.textContent = ownPage ? 'ADHD Reader' : siteKey === 'file://' ? t('localFiles') : siteKey || '—';
 
   bindSettings(document.body, (settings, { draft }) => {
     renderPreview(preview, t('previewText'), settings);
@@ -36,6 +37,15 @@
     else showNotice({ text: t('noticeReaderUnavailable') });
   });
   document.getElementById('open-options').addEventListener('click', () => chrome.runtime.openOptionsPage());
+  const viewer = chrome.runtime.getURL('src/viewer/viewer.html');
+  document.getElementById('open-file').addEventListener('click', () => {
+    chrome.tabs.create({ url: viewer });
+    window.close();
+  });
+  document.getElementById('open-viewer').addEventListener('click', () => {
+    chrome.tabs.update(tab.id, { url: `${viewer}?file=${encodeURIComponent(tab.url)}` });
+    window.close();
+  });
   document.getElementById('reload').addEventListener('click', () => {
     chrome.tabs.reload(tab.id);
     window.close();
@@ -50,6 +60,7 @@
   /** Explains why the extension can't work on the current tab, if that's the case. */
   async function diagnose() {
     const url = tab?.url || '';
+    if (url.startsWith(chrome.runtime.getURL(''))) return null; // our own document viewer
     if (!siteKey || /^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/.test(url)) {
       return { text: t('noticeRestricted') };
     }
@@ -60,7 +71,7 @@
       await chrome.tabs.sendMessage(tab.id, { type: 'getStatus' }, { frameId: 0 });
       return null;
     } catch {
-      if (/\.pdf($|[?#])/i.test(url)) return { text: t('noticePdf') };
+      if (/\.pdf($|[?#])/i.test(url)) return { text: t('noticePdf'), viewer: true };
       return { text: t('noticeReload'), reload: true };
     }
   }
@@ -69,6 +80,7 @@
     if (!notice) return;
     document.getElementById('notice-text').textContent = notice.text;
     document.getElementById('reload').hidden = !notice.reload;
+    document.getElementById('open-viewer').hidden = !notice.viewer;
     document.getElementById('notice').hidden = false;
   }
 

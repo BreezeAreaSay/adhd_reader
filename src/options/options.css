@@ -136,3 +136,7 @@ textarea {
   gap: 12px;
   font-size: 12.5px;
 }
+
+#open-viewer {
+  margin-top: 12px;
+}

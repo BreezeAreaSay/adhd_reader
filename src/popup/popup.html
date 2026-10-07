@@ -31,6 +31,7 @@
       <p class="notice" id="notice" hidden>
         <span id="notice-text"></span>
         <button type="button" class="link-button" id="reload" hidden data-i18n="reloadPage">Reload</button>
+        <button type="button" class="link-button" id="open-viewer" hidden data-i18n="openInViewer">Open in ADHD Reader</button>
       </p>
 
       <section class="actions">
@@ -123,7 +124,10 @@
 
     <footer class="foot">
       <span class="muted" id="shortcut"></span>
-      <button type="button" class="link-button" id="open-options" data-i18n="moreSettings">All settings</button>
+      <span class="foot-links">
+        <button type="button" class="link-button" id="open-file" data-i18n="openFileButton" data-i18n-title="openFileTitle">Open a file…</button>
+        <button type="button" class="link-button" id="open-options" data-i18n="moreSettings">All settings</button>
+      </span>
     </footer>
 
     <script src="../shared/settings.js"></script>

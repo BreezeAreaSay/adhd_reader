@@ -56,6 +56,7 @@ function renderSsrPage(req, res) {
 /** Registers before/after hooks and returns an object filled in once the browser is up. */
 function setupExtension() {
   const env = {};
+  const routes = new Map(); // pathname → { body, headers }, added by tests with env.serve()
   let server;
 
   test.before(async () => {
@@ -68,6 +69,12 @@ function setupExtension() {
       }
       if (pathname === '/ssr-react') {
         renderSsrPage(req, res);
+        return;
+      }
+      if (routes.has(pathname)) {
+        const { body, headers } = routes.get(pathname);
+        res.writeHead(200, { 'content-length': String(Buffer.byteLength(body)), ...headers });
+        res.end(req.method === 'HEAD' ? undefined : body);
         return;
       }
       if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
@@ -101,6 +108,14 @@ function setupExtension() {
   test.beforeEach(async () => {
     await env.worker.evaluate(() => chrome.storage.sync.clear());
   });
+
+  /** Serves `body` at `pathname` (for generated documents); returns its full URL. */
+  env.serve = (pathname, body, headers = {}) => {
+    routes.set(pathname, { body, headers });
+    return `${env.baseUrl}${pathname}`;
+  };
+
+  env.viewerUrl = (file) => `chrome-extension://${env.extensionId}/src/viewer/viewer.html${file ? `?file=${encodeURIComponent(file)}` : ''}`;
 
   env.setSettings = (patch) => env.worker.evaluate((p) => chrome.storage.sync.set(p), patch);
 

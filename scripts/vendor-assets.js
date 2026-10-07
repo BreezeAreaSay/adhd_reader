@@ -71,5 +71,25 @@ const readability = path.join(MODULES, '@mozilla/readability');
 fs.copyFileSync(path.join(readability, 'Readability.js'), path.join(vendorDir, 'Readability.js'));
 fs.copyFileSync(path.join(readability, 'LICENSE.md'), path.join(vendorDir, 'Readability.LICENSE.md'));
 
+// pdf.js (Apache-2.0), legacy build: it supports older browsers (Chrome 111, Firefox ESR) than the
+// default build. CMaps and standard fonts are needed to extract text from many PDFs correctly.
+const pdfjs = path.join(MODULES, 'pdfjs-dist');
+const pdfOut = path.join(vendorDir, 'pdfjs');
+fs.rmSync(pdfOut, { recursive: true, force: true });
+fs.mkdirSync(pdfOut, { recursive: true });
+fs.copyFileSync(path.join(pdfjs, 'legacy/build/pdf.min.mjs'), path.join(pdfOut, 'pdf.min.mjs'));
+fs.copyFileSync(path.join(pdfjs, 'legacy/build/pdf.worker.min.mjs'), path.join(pdfOut, 'pdf.worker.min.mjs'));
+fs.copyFileSync(path.join(pdfjs, 'LICENSE'), path.join(pdfOut, 'LICENSE'));
+for (const dir of ['cmaps', 'standard_fonts', 'iccs']) fs.cpSync(path.join(pdfjs, dir), path.join(pdfOut, dir), { recursive: true });
+fs.mkdirSync(path.join(pdfOut, 'wasm'));
+for (const file of fs.readdirSync(path.join(pdfjs, 'wasm'))) {
+  if (file.startsWith('quickjs')) continue; // runs JavaScript embedded in PDFs: not wanted
+  fs.copyFileSync(path.join(pdfjs, 'wasm', file), path.join(pdfOut, 'wasm', file));
+}
+
+// fflate (MIT): unzips EPUB and .fb2.zip books.
+fs.copyFileSync(path.join(MODULES, 'fflate/esm/browser.js'), path.join(vendorDir, 'fflate.mjs'));
+fs.copyFileSync(path.join(MODULES, 'fflate/LICENSE'), path.join(vendorDir, 'fflate.LICENSE'));
+
 const total = fs.readdirSync(outDir).reduce((sum, f) => sum + fs.statSync(path.join(outDir, f)).size, 0);
-console.log(`${faces.length} font faces, ${(total / 1024).toFixed(0)} KB in fonts/; Readability copied to src/vendor/`);
+console.log(`${faces.length} font faces, ${(total / 1024).toFixed(0)} KB in fonts/; Readability, pdf.js and fflate copied to src/vendor/`);

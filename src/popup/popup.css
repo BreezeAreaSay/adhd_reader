@@ -118,3 +118,9 @@ main {
   margin-top: 10px;
   font-size: 12.5px;
 }
+
+.foot-links {
+  display: flex;
+  gap: 14px;
+  white-space: nowrap;
+}

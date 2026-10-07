@@ -1,0 +1,129 @@
+/* Document viewer page. The reading column itself is styled by src/shared/reading-view.js. */
+html,
+body {
+  margin: 0;
+  background: var(--bg, #fbfaf7);
+  color: var(--text, #1d2125);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* --- welcome screen ------------------------------------------------------------------------ */
+.welcome {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.welcome-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.welcome-head h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.welcome-head p {
+  margin: 2px 0 0;
+  color: var(--muted, #646b73);
+}
+
+.drop {
+  padding: 40px 24px;
+  border: 2px dashed var(--line, #e4e1d9);
+  border-radius: 16px;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.drop.is-over,
+body.is-dragging .drop {
+  border-color: var(--accent, #0f7a69);
+  background: color-mix(in srgb, var(--accent, #0f7a69) 8%, transparent);
+}
+
+.drop-title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.drop-hint,
+.drop-note {
+  margin: 0 0 18px;
+  color: var(--muted, #646b73);
+}
+
+.drop-note {
+  margin: 16px 0 0;
+}
+
+button.primary {
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent, #0f7a69);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.primary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent, #0f7a69) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.recent h2 {
+  margin: 32px 0 10px;
+  font-size: 15px;
+}
+
+.recent ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recent li + li {
+  border-top: 1px solid var(--line, #e4e1d9);
+}
+
+.recent button {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.recent button:hover .recent-title {
+  text-decoration: underline;
+}
+
+.recent-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-meta {
+  color: var(--muted, #646b73);
+  font-size: 13px;
+  white-space: nowrap;
+}

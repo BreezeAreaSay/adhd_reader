@@ -228,7 +228,7 @@
     "message": "Чтобы работать с локальными файлами, включите «Разрешить доступ к URL файлов» для ADHD Reader на странице chrome://extensions."
   },
   "noticePdf": {
-    "message": "PDF открываются во встроенном просмотрщике Chrome, который расширения пока не могут менять."
+    "message": "Этот PDF открыт во встроенном просмотрщике браузера, который расширения менять не могут. Откройте его в ADHD Reader — там работают все режимы."
   },
   "noticeReload": {
     "message": "Перезагрузите страницу, чтобы ADHD Reader заработал здесь."
@@ -385,5 +385,154 @@
   },
   "font_andika": {
     "message": "Andika — чёткие, различимые буквы"
+  },
+  "viewerSubtitle": {
+    "message": "PDF, EPUB, FB2 и TXT с бионическим чтением, вашими шрифтами и режимами фокуса"
+  },
+  "viewerDropTitle": {
+    "message": "Перетащите файл сюда"
+  },
+  "viewerDropHint": {
+    "message": "PDF, EPUB, FB2 (и .fb2.zip) или TXT. Файл открывается прямо здесь и никуда не загружается."
+  },
+  "viewerChoose": {
+    "message": "Выбрать файл"
+  },
+  "viewerRecent": {
+    "message": "Недавно читали"
+  },
+  "viewerPickAgain": {
+    "message": "Выберите «$NAME$» ещё раз: файлы с компьютера нельзя открыть повторно автоматически.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerDownloading": {
+    "message": "Загрузка…"
+  },
+  "viewerDownloadingPercent": {
+    "message": "Загрузка… $N$%",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerOpening": {
+    "message": "Открываю…"
+  },
+  "viewerHttpError": {
+    "message": "Не удалось скачать файл (ошибка $N$).",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerUnsupported": {
+    "message": "Этот формат не поддерживается. Откройте файл PDF, EPUB, FB2 или TXT."
+  },
+  "viewerBroken": {
+    "message": "Не удалось прочитать файл: возможно, он повреждён."
+  },
+  "viewerContents": {
+    "message": "Оглавление"
+  },
+  "viewerPagesMode": {
+    "message": "Страницы"
+  },
+  "viewerTextMode": {
+    "message": "Текст"
+  },
+  "viewerModeHint": {
+    "message": "Переключить: текст для чтения ↔ исходные страницы"
+  },
+  "viewerOriginal": {
+    "message": "Открыть оригинал"
+  },
+  "viewerOpenFile": {
+    "message": "Открыть другой файл"
+  },
+  "viewerPassword": {
+    "message": "PDF защищён паролем. Введите пароль:"
+  },
+  "viewerPasswordWrong": {
+    "message": "Неверный пароль. Попробуйте ещё раз:"
+  },
+  "viewerPdfMeta": {
+    "message": "PDF · страниц: $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerPreparing": {
+    "message": "Готовлю текст… $PAGE$ / $TOTAL$",
+    "placeholders": {
+      "page": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "viewerPage": {
+    "message": "Стр. $PAGE$ из $TOTAL$",
+    "placeholders": {
+      "page": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "viewerScanned": {
+    "message": "Похоже, это скан: в PDF почти нет текста, поэтому он показан страницами. Бионическому чтению и шрифтам нужен настоящий текст."
+  },
+  "viewerResumedPage": {
+    "message": "Продолжаем со стр. $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerResumed": {
+    "message": "Продолжаем с того места, где вы остановились"
+  },
+  "viewerFromStart": {
+    "message": "С начала"
+  },
+  "menuOpenInViewer": {
+    "message": "Открыть в ADHD Reader"
+  },
+  "openFileButton": {
+    "message": "Открыть файл…"
+  },
+  "openFileTitle": {
+    "message": "Читать PDF, EPUB, FB2 или TXT с компьютера"
+  },
+  "openInViewer": {
+    "message": "Открыть в ADHD Reader"
+  },
+  "sectionDocuments": {
+    "message": "Документы и книги"
+  },
+  "documentsHint": {
+    "message": "PDF, EPUB, FB2 и TXT открываются в собственном просмотрщике расширения, где работает всё: бионика, шрифты, интервалы, подсветка и фокус. Он запоминает, где вы остановились."
+  },
+  "openDocumentsLabel": {
+    "message": "Открывать ссылки на PDF в ADHD Reader"
+  },
+  "openDocumentsHint": {
+    "message": "Вместо встроенного просмотрщика Chrome, который расширения менять не могут. Кнопка ↗ в просмотрщике покажет оригинал."
+  },
+  "openViewer": {
+    "message": "Открыть просмотрщик"
   }
 }

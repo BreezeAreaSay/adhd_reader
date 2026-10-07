@@ -38,6 +38,9 @@
     readerTheme: 'auto',
     readerFontSize: 20, // px
     readerWidth: 68, // characters per line
+
+    // Documents
+    openDocuments: true, // open PDF links in the extension's document viewer
   });
 
   const LIMITS = Object.freeze({
@@ -64,7 +67,7 @@
     readerTheme: ['auto', 'light', 'sepia', 'dark'],
   });
 
-  const BOOLEANS = ['enabled', 'bionic', 'skipCode'];
+  const BOOLEANS = ['enabled', 'bionic', 'skipCode', 'openDocuments'];
 
   // Light colours multiplied over the page, like coloured paper.
   const TINT_COLORS = Object.freeze({

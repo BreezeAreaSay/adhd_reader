@@ -228,7 +228,7 @@
     "message": "To use it on local files, enable “Allow access to file URLs” for ADHD Reader in chrome://extensions."
   },
   "noticePdf": {
-    "message": "PDF files open in Chrome's built-in viewer, which extensions can't change yet."
+    "message": "This PDF is open in the browser’s own viewer, which extensions can’t change. Open it in ADHD Reader to read it with all modes."
   },
   "noticeReload": {
     "message": "Reload the page to activate ADHD Reader here."
@@ -385,5 +385,154 @@
   },
   "font_andika": {
     "message": "Andika — clear, distinct letters"
+  },
+  "viewerSubtitle": {
+    "message": "PDF, EPUB, FB2 and TXT with bionic reading, your fonts and focus modes"
+  },
+  "viewerDropTitle": {
+    "message": "Drop a file here"
+  },
+  "viewerDropHint": {
+    "message": "PDF, EPUB, FB2 (also .fb2.zip) or TXT. The file is opened right here and is not uploaded anywhere."
+  },
+  "viewerChoose": {
+    "message": "Choose a file"
+  },
+  "viewerRecent": {
+    "message": "Recently read"
+  },
+  "viewerPickAgain": {
+    "message": "Choose “$NAME$” again: files from your computer can’t be reopened automatically.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerDownloading": {
+    "message": "Downloading…"
+  },
+  "viewerDownloadingPercent": {
+    "message": "Downloading… $N$%",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerOpening": {
+    "message": "Opening…"
+  },
+  "viewerHttpError": {
+    "message": "Could not download the file (error $N$).",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerUnsupported": {
+    "message": "This file format is not supported. Open a PDF, EPUB, FB2 or TXT file."
+  },
+  "viewerBroken": {
+    "message": "The file could not be read: it may be damaged."
+  },
+  "viewerContents": {
+    "message": "Contents"
+  },
+  "viewerPagesMode": {
+    "message": "Pages"
+  },
+  "viewerTextMode": {
+    "message": "Text"
+  },
+  "viewerModeHint": {
+    "message": "Switch between text for reading and the original pages"
+  },
+  "viewerOriginal": {
+    "message": "Open the original"
+  },
+  "viewerOpenFile": {
+    "message": "Open another file"
+  },
+  "viewerPassword": {
+    "message": "This PDF is protected. Password:"
+  },
+  "viewerPasswordWrong": {
+    "message": "Wrong password. Try again:"
+  },
+  "viewerPdfMeta": {
+    "message": "PDF · $N$ pages",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerPreparing": {
+    "message": "Preparing the text… $PAGE$ / $TOTAL$",
+    "placeholders": {
+      "page": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "viewerPage": {
+    "message": "Page $PAGE$ of $TOTAL$",
+    "placeholders": {
+      "page": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "viewerScanned": {
+    "message": "This PDF looks like a scan: it has almost no text, so it is shown as pages. Bionic reading and fonts need real text."
+  },
+  "viewerResumedPage": {
+    "message": "Continuing from page $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "viewerResumed": {
+    "message": "Continuing where you stopped"
+  },
+  "viewerFromStart": {
+    "message": "From the start"
+  },
+  "menuOpenInViewer": {
+    "message": "Open in ADHD Reader"
+  },
+  "openFileButton": {
+    "message": "Open a file…"
+  },
+  "openFileTitle": {
+    "message": "Read a PDF, EPUB, FB2 or TXT file from your computer"
+  },
+  "openInViewer": {
+    "message": "Open in ADHD Reader"
+  },
+  "sectionDocuments": {
+    "message": "Documents and books"
+  },
+  "documentsHint": {
+    "message": "PDF, EPUB, FB2 and TXT open in the extension’s own viewer, where everything works: bionic reading, fonts, spacing, tint and focus. It remembers where you stopped."
+  },
+  "openDocumentsLabel": {
+    "message": "Open PDF links in ADHD Reader"
+  },
+  "openDocumentsHint": {
+    "message": "Instead of Chrome’s PDF viewer, which extensions can’t change. The ↗ button in the viewer shows the original."
+  },
+  "openViewer": {
+    "message": "Open the viewer"
   }
 }
