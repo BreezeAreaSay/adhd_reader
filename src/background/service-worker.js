@@ -2,7 +2,8 @@
  * Background service worker: shortcuts, context menu, toolbar badge, reader view, open tabs, and
  * PDF links opened in the document viewer.
  */
-importScripts('../shared/settings.js');
+// In Firefox this runs as an event page, with settings.js loaded before it by the manifest.
+if (typeof importScripts === 'function') importScripts('../shared/settings.js');
 
 const ADHDR = self.ADHDR;
 const t = (key) => chrome.i18n.getMessage(key) || key;

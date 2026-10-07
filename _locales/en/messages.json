@@ -3,7 +3,7 @@
     "message": "ADHD Reader"
   },
   "extDescription": {
-    "message": "Bionic-style reading on every site, plus reader view, a focus ruler, readable fonts and page tints."
+    "message": "Bionic-style reading on every site and in PDFs and e-books, plus reader view, a focus ruler, readable fonts and tints."
   },
   "actionTitle": {
     "message": "ADHD Reader"
@@ -540,5 +540,8 @@
   },
   "noticeCanvas": {
     "message": "This app draws its content on a canvas, so extensions can’t change that text. Its menus and panels still work."
+  },
+  "viewerLocalFirefox": {
+    "message": "Firefox doesn’t let add-ons read files from the computer by their address. Choose the file here instead — it opens right away."
   }
 }

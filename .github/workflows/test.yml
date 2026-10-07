@@ -1,3 +1,5 @@
+# Unit tests, end-to-end tests in Chromium and Firefox, and the Chrome and Firefox packages
+# (downloadable from the run's "Artifacts").
 name: Tests
 
 on:
@@ -17,3 +19,14 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run test:e2e
+      - run: npm run build
+      # GitHub's Ubuntu runners come with Firefox and geckodriver ($GECKOWEBDRIVER is its folder).
+      - run: FIREFOX_BIN="$(command -v firefox)" GECKODRIVER="$GECKOWEBDRIVER/geckodriver" npm run test:firefox
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adhd-reader-chrome
+          path: dist/chrome/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adhd-reader-firefox
+          path: dist/firefox/

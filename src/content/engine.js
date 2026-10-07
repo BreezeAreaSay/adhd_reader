@@ -480,13 +480,13 @@
   /** Open or closed shadow root of `el` (closed ones only for custom elements). */
   function shadowRootOf(el) {
     if (el.shadowRoot) return el.shadowRoot;
-    // Closed shadow roots are only reachable through extension APIs: chrome.dom in Chrome,
-    // element.openOrClosedShadowRoot() in Firefox. They are practically always on custom elements,
-    // so we don't pay for the call on every <div>.
+    // Closed shadow roots are only reachable through extension APIs: chrome.dom in Chrome, the
+    // element.openOrClosedShadowRoot property in Firefox. They are practically always on custom
+    // elements, so we don't pay for the call on every <div>.
     if (!el.localName.includes('-')) return null;
     try {
       if (root.chrome?.dom?.openOrClosedShadowRoot) return chrome.dom.openOrClosedShadowRoot(el);
-      if (typeof el.openOrClosedShadowRoot === 'function') return el.openOrClosedShadowRoot();
+      if ('openOrClosedShadowRoot' in el) return el.openOrClosedShadowRoot || null; // Firefox: a property
     } catch {
       // not an element this API accepts
     }

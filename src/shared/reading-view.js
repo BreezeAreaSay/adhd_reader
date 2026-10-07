@@ -128,10 +128,10 @@
     };
     const tool = ({ action, label, title }) => h('button', { class: 'tool', type: 'button', 'data-action': action, title, 'aria-label': title }, label);
 
-    const sheet = new doc.defaultView.CSSStyleSheet();
+    const sheet = ns.createSheet(doc);
     const applyCss = () => sheet.replaceSync(readingCss(settings) + (options.extraCss || ''));
     applyCss();
-    styleTarget.adoptedStyleSheets = [...styleTarget.adoptedStyleSheets, sheet];
+    ns.adoptSheet(styleTarget, sheet);
 
     const bar = h('div', { class: 'progress-bar' });
     const left = h('span', { class: 'left' });
@@ -272,7 +272,7 @@
         unsubscribe();
         doc.defaultView.removeEventListener('keydown', onKey, true);
         container.removeEventListener('copy', onCopy);
-        styleTarget.adoptedStyleSheets = styleTarget.adoptedStyleSheets.filter((s) => s !== sheet);
+        ns.dropSheet(styleTarget, sheet);
         scroller.remove();
       },
     };

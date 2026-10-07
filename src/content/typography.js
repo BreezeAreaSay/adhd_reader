@@ -60,14 +60,26 @@
       .join('\n');
   }
 
+  // Firefox content scripts see page objects through "Xray" wrappers, through which
+  // adoptedStyleSheets can't be read as a list; the page's own view of the object
+  // (wrappedJSObject) can. Sheets are made with the page's own CSSStyleSheet for the same reason.
+  // Elsewhere (Chrome, extension pages) objects have no wrappedJSObject and are used as they are.
+  const pageView = (obj) => obj.wrappedJSObject || obj;
+
+  function createSheet(doc) {
+    const PageSheet = pageView(doc.defaultView).CSSStyleSheet;
+    return new PageSheet();
+  }
+
   function adopt(target, sheet) {
-    if (!target.adoptedStyleSheets.includes(sheet)) target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet];
+    const list = pageView(target).adoptedStyleSheets;
+    if (!list.includes(sheet)) list.push(sheet);
   }
 
   function unadopt(target, sheet) {
-    if (target.adoptedStyleSheets.includes(sheet)) {
-      target.adoptedStyleSheets = target.adoptedStyleSheets.filter((s) => s !== sheet);
-    }
+    const list = pageView(target).adoptedStyleSheets;
+    const index = list.indexOf(sheet);
+    if (index >= 0) list.splice(index, 1);
   }
 
   // One @font-face sheet per document, shared by the page typography and the reader view.
@@ -75,7 +87,7 @@
   const faceSheets = new WeakMap();
   function ensureFontFaces(doc) {
     if (!faceSheets.has(doc)) {
-      const sheet = new doc.defaultView.CSSStyleSheet();
+      const sheet = createSheet(doc);
       sheet.replaceSync(fontFaceCss((file) => chrome.runtime.getURL(`fonts/${file}`)));
       faceSheets.set(doc, sheet);
     }
@@ -83,7 +95,7 @@
   }
 
   function createTypography(doc) {
-    const sheet = new doc.defaultView.CSSStyleSheet();
+    const sheet = createSheet(doc);
     const shadowRoots = new Set();
     let attached = false;
 
@@ -119,6 +131,9 @@
   ns.fontStack = fontStack;
   ns.buildPageCss = buildPageCss;
   ns.ensureFontFaces = ensureFontFaces;
+  ns.createSheet = createSheet;
+  ns.adoptSheet = adopt;
+  ns.dropSheet = unadopt;
   ns.createTypography = createTypography;
   if (typeof module === 'object' && module.exports) module.exports = { FONT_STACKS, fontStack, buildPageCss, fontFaceCss };
 })(globalThis);

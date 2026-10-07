@@ -236,7 +236,11 @@ async function fetchBytes(url, onProgress) {
   try {
     response = await fetch(url, { credentials: 'include' });
   } catch (error) {
-    if (url.startsWith('file:') && !(await chrome.extension.isAllowedFileSchemeAccess())) throw new Error(t('noticeFileAccess'));
+    // Chrome reads local files only with "Allow access to file URLs"; Firefox never lets add-ons.
+    if (url.startsWith('file:')) {
+      if (typeof globalThis.browser?.runtime?.getBrowserInfo === 'function') throw new Error(t('viewerLocalFirefox'));
+      if (!(await chrome.extension.isAllowedFileSchemeAccess())) throw new Error(t('noticeFileAccess'));
+    }
     throw error;
   }
   if (!response.ok) throw new Error(t('viewerHttpError', [String(response.status)]));

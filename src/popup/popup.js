@@ -5,6 +5,7 @@
   const ADHDR = globalThis.ADHDR;
   const { t, localize, bindSettings, renderPreview, paintSwatches } = ADHDR.ui;
   const TAB_KEY = 'adhdr-popup-tab';
+  const isFirefox = typeof globalThis.browser?.runtime?.getBrowserInfo === 'function';
 
   localize();
   paintSwatches();
@@ -61,10 +62,12 @@
   async function diagnose() {
     const url = tab?.url || '';
     if (url.startsWith(chrome.runtime.getURL(''))) return null; // our own document viewer
-    if (!siteKey || /^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/.test(url)) {
+    // Browser stores where no extension may run.
+    if (!siteKey || /^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore|addons\.mozilla\.org)/.test(url)) {
       return { text: t('noticeRestricted') };
     }
-    if (siteKey === 'file://' && !(await chrome.extension.isAllowedFileSchemeAccess())) {
+    // (A Chrome switch. Firefox has none and its API always answers false.)
+    if (siteKey === 'file://' && !isFirefox && !(await chrome.extension.isAllowedFileSchemeAccess())) {
       return { text: t('noticeFileAccess') };
     }
     // Apps that draw their content on a <canvas>: no text there for an extension to change.

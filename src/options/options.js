@@ -40,7 +40,9 @@
     chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html') });
   });
   document.getElementById('open-shortcuts').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+    // Firefox keeps shortcuts in its add-ons manager and has an API to open it.
+    if (chrome.commands?.openShortcutSettings) chrome.commands.openShortcutSettings();
+    else chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
   });
 
   const list = document.getElementById('shortcuts');
