@@ -65,7 +65,11 @@
         setTimeout(resolve, LOAD_TIMEOUT_MS);
       });
     }
-    if (typeof requestIdleCallback !== 'function') return;
+    if (typeof requestIdleCallback !== 'function') {
+      // Safari/WebKit-based browsers have no idle callbacks: just give the page a moment.
+      await new Promise((resolve) => setTimeout(resolve, QUIET_MS));
+      return;
+    }
     await new Promise((resolve) => {
       const giveUp = setTimeout(resolve, QUIET_TIMEOUT_MS);
       let quietSince = performance.now();

@@ -41,7 +41,7 @@
     window.close();
   });
 
-  const commands = await chrome.commands.getAll();
+  const commands = (await chrome.commands?.getAll()) || [];
   const shortcut = commands.find((command) => command.name === 'toggle-site')?.shortcut;
   if (shortcut) document.getElementById('shortcut').textContent = t('shortcutHint', [shortcut]);
 

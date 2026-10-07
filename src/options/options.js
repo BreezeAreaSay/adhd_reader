@@ -41,7 +41,7 @@
   });
 
   const list = document.getElementById('shortcuts');
-  for (const command of await chrome.commands.getAll()) {
+  for (const command of (await chrome.commands?.getAll()) || []) {
     if (command.name === '_execute_action' || !command.description) continue;
     const item = document.createElement('li');
     const name = document.createElement('span');

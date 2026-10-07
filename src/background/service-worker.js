@@ -10,8 +10,12 @@ const FOCUS_MODES = ['off', 'line', 'paragraph'];
 const READER_DEPENDENCIES = ['src/shared/settings.js', 'src/content/bionic.js', 'src/content/engine.js', 'src/content/font-faces.js', 'src/content/typography.js'];
 const READER_FILES = ['src/vendor/Readability.js', 'src/content/reader.js'];
 
+// Not every Chromium-based or WebExtensions browser has every API (no context menus or keyboard
+// shortcuts on iPhone/iPad, for example): features whose API is missing are simply skipped.
+const hasMenus = Boolean(chrome.contextMenus);
+
 chrome.runtime.onInstalled.addListener(async () => {
-  createMenus();
+  if (hasMenus) createMenus();
   await injectIntoOpenTabs();
 });
 
@@ -64,7 +68,7 @@ async function activeTab() {
   return (await chrome.tabs.query({ active: true, lastFocusedWindow: true }))[0];
 }
 
-chrome.commands.onCommand.addListener(async (command, tab) => {
+chrome.commands?.onCommand.addListener(async (command, tab) => {
   tab = tab ?? (await activeTab());
   const settings = await ADHDR.loadSettings();
   if (command === 'toggle-global') {
@@ -98,9 +102,9 @@ function syncMenus(settings) {
   chrome.contextMenus.update(`focus-${settings.focus}`, { checked: true }, () => void chrome.runtime.lastError);
 }
 
-ADHDR.onSettingsChanged(syncMenus);
+if (hasMenus) ADHDR.onSettingsChanged(syncMenus);
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+chrome.contextMenus?.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'reader') {
     if (tab) await toggleReader(tab.id);
   } else if (info.menuItemId === 'toggle-site') {
