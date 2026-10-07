@@ -48,6 +48,7 @@
         "src/shared/settings.js",
         "src/content/bionic.js",
         "src/content/engine.js",
+        "src/content/shadow-roots.js",
         "src/content/font-faces.js",
         "src/content/typography.js",
         "src/content/overlay.js",

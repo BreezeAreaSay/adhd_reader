@@ -477,17 +477,18 @@
     };
   }
 
-  /** Open or closed shadow root of `el` (closed ones only for custom elements and our own hosts). */
+  /** Open or closed shadow root of `el` (closed ones only for custom elements). */
   function shadowRootOf(el) {
     if (el.shadowRoot) return el.shadowRoot;
-    // Closed shadow roots are only reachable through this extension API. They are practically
-    // always on custom elements, so we don't pay for the call on every <div>.
-    if (el.localName.includes('-') && root.chrome?.dom?.openOrClosedShadowRoot) {
-      try {
-        return chrome.dom.openOrClosedShadowRoot(el);
-      } catch {
-        return null;
-      }
+    // Closed shadow roots are only reachable through extension APIs: chrome.dom in Chrome,
+    // element.openOrClosedShadowRoot() in Firefox. They are practically always on custom elements,
+    // so we don't pay for the call on every <div>.
+    if (!el.localName.includes('-')) return null;
+    try {
+      if (root.chrome?.dom?.openOrClosedShadowRoot) return chrome.dom.openOrClosedShadowRoot(el);
+      if (typeof el.openOrClosedShadowRoot === 'function') return el.openOrClosedShadowRoot();
+    } catch {
+      // not an element this API accepts
     }
     return null;
   }

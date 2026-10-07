@@ -67,6 +67,9 @@
     if (siteKey === 'file://' && !(await chrome.extension.isAllowedFileSchemeAccess())) {
       return { text: t('noticeFileAccess') };
     }
+    // Apps that draw their content on a <canvas>: no text there for an extension to change.
+    if (/^https:\/\/docs\.google\.com\/(?:u\/\d+\/)?(?:document|presentation)\/d\//.test(url)) return { text: t('noticeGoogleDocs') };
+    if (/^https:\/\/(?:www\.)?figma\.com\/(?:file|design|board|slides|proto)\//.test(url)) return { text: t('noticeCanvas') };
     try {
       await chrome.tabs.sendMessage(tab.id, { type: 'getStatus' }, { frameId: 0 });
       return null;

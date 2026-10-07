@@ -40,7 +40,9 @@
       console.warn('ADHD Reader: could not extract the article', error);
     }
     // Readability always returns its best guess; too little text means there is no article here.
-    if (!article?.content || (article.textContent || '').trim().length < MIN_ARTICLE_CHARS) {
+    // (An exported document is the real thing, however short.)
+    const minChars = article?.exported ? 1 : MIN_ARTICLE_CHARS;
+    if (!article?.content || (article.textContent || '').trim().length < minChars) {
       state = null;
       toast(t('readerNotFound'));
       return;
@@ -69,10 +71,8 @@
     if (!match) return null;
     const [, base, kind] = match;
     const title = document.title.replace(/\s+[-–—]\s+Google (Docs|Документы|Slides|Презентации)$/i, '').trim();
-    const exportUrl = kind === 'document' ? `${base}/export?format=html` : `${base}/export/txt`;
-    const response = await fetch(exportUrl, { credentials: 'include' });
-    if (!response.ok) throw new Error(`export failed: ${response.status}`);
-    const text = await response.text();
+    const exportUrl = new URL(kind === 'document' ? `${base}/export?format=html` : `${base}/export/txt`, location.origin).href;
+    const text = await fetchExport(exportUrl);
 
     const doc = document.implementation.createHTMLDocument(title);
     const content = doc.createElement('div');
@@ -87,7 +87,31 @@
         content.append(p);
       }
     }
-    return { title, content, textContent: content.textContent, siteName: kind === 'document' ? 'Google Docs' : 'Google Slides', lang: document.documentElement.lang };
+    return {
+      title,
+      content,
+      textContent: content.textContent,
+      siteName: kind === 'document' ? 'Google Docs' : 'Google Slides',
+      lang: document.documentElement.lang,
+      exported: true,
+    };
+  }
+
+  /**
+   * Fetches an export with the user's session: from the page (same origin), or — when Docs answers
+   * with a redirect to another domain, which the page's CORS rules block — through the background.
+   */
+  async function fetchExport(url) {
+    let response = null;
+    try {
+      response = await fetch(url, { credentials: 'include' });
+    } catch {
+      const reply = await chrome.runtime.sendMessage({ type: 'fetchExport', url });
+      if (typeof reply?.text === 'string') return reply.text;
+      throw new Error(`export failed: ${reply?.status || 'network'}`);
+    }
+    if (!response.ok) throw new Error(`export failed: ${response.status}`);
+    return response.text();
   }
 
   /**

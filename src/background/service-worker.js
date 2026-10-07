@@ -14,6 +14,8 @@ const READER_DEPENDENCIES = ['src/shared/settings.js', 'src/content/bionic.js', 
 const READER_FILES = ['src/vendor/Readability.js', 'src/shared/sanitize.js', 'src/shared/reading-view.js', 'src/content/reader.js'];
 
 const VIEWER_PAGE = 'src/viewer/viewer.html';
+// Google Docs/Slides export addresses the reader view may ask us to fetch (and nothing else).
+const GOOGLE_EXPORT = /^https:\/\/docs\.google\.com\/(?:u\/\d+\/)?(?:document|presentation)\/d\/[\w-]+\/export(?:\?format=html|\/txt)$/;
 // Links the context menu offers to open in the viewer.
 const DOCUMENT_LINKS = ['pdf', 'PDF', 'epub', 'EPUB', 'fb2', 'FB2', 'fb2.zip'].flatMap((ext) => [`*://*/*.${ext}`, `*://*/*.${ext}?*`, `*://*/*.${ext}#*`, `file:///*.${ext}`]);
 
@@ -134,6 +136,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     chrome.action.setBadgeBackgroundColor({ tabId, color: '#6b7280' });
   } else if (message?.type === 'toggleReader' && Number.isInteger(message.tabId)) {
     toggleReader(message.tabId).then(sendResponse);
+    return true; // async response
+  } else if (message?.type === 'fetchExport' && sender.tab && GOOGLE_EXPORT.test(message.url)) {
+    // The reader view on Google Docs/Slides, when the export redirects off docs.google.com.
+    fetch(message.url, { credentials: 'include' })
+      .then(async (response) => sendResponse(response.ok ? { text: await response.text() } : { status: response.status }))
+      .catch(() => sendResponse({ status: 'network' }));
     return true; // async response
   } else if (message?.type === 'openOriginal' && sender.tab && isDocumentUrl(message.url)) {
     // The viewer's "open the original" button: show the browser's own viewer this time.

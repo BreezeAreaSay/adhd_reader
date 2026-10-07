@@ -27,10 +27,13 @@
 
   const typography = ADHDR.createTypography(document);
   const engine = ADHDR.createBionicEngine({ onRoot: (shadowRoot) => typography.addRoot(shadowRoot) });
+  // Without bionic emphasis the engine doesn't run, so this finds shadow roots for the page font.
+  const shadowRoots = ADHDR.createShadowRootWatcher(document, (shadowRoot) => typography.addRoot(shadowRoot));
   const overlay = isTopFrame ? ADHDR.createOverlay(document) : null;
 
   let settings = null;
   let pageActive = false;
+  let domReady = false; // the HTML has been parsed
   let domSafe = false; // the page is ready for DOM changes
   let retired = false;
 
@@ -59,7 +62,11 @@
     .catch(() => {}); // extension context gone (reloaded/uninstalled) — nothing to do
 
   whenDomReady()
-    .then(() => (injectedLate ? null : waitForHydration()))
+    .then(() => {
+      domReady = true;
+      if (settings && !retired) updateShadowRoots();
+      return injectedLate ? null : waitForHydration();
+    })
     .then(() => settingsLoaded)
     .then(() => {
       if (retired) return;
@@ -85,14 +92,23 @@
     settings = next;
     pageActive = next.enabled && ADHDR.isSiteActive(next, siteKey) && isEligibleDocument();
     typography.update(pageActive ? next : null);
+    updateShadowRoots();
     if (!domSafe) return;
     engine.update(pageActive && next.bionic ? next : null);
     overlay?.update(pageActive ? next : null);
     reportStatus();
   }
 
+  /** Looks for shadow roots for the page font and spacing while the bionic engine isn't doing it. */
+  function updateShadowRoots() {
+    const engineFindsThem = domSafe && settings.bionic;
+    if (domReady && pageActive && !engineFindsThem && ADHDR.buildPageCss(settings)) shadowRoots.start();
+    else shadowRoots.stop();
+  }
+
   function retire() {
     if (retired) return;
+    shadowRoots.stop();
     engine.update(null);
     typography.update(null);
     overlay?.destroy();

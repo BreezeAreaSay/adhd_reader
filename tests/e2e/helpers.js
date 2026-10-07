@@ -130,7 +130,8 @@ function setupExtension() {
     return { page, errors };
   };
 
-  env.tabIdOf = (page) => env.worker.evaluate(async (url) => (await chrome.tabs.query({ url }))[0].id, page.url());
+  // (Match patterns never include the #fragment.)
+  env.tabIdOf = (page) => env.worker.evaluate(async (url) => (await chrome.tabs.query({ url }))[0].id, page.url().split('#')[0]);
 
   return env;
 }

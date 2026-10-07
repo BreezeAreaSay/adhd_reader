@@ -41,17 +41,19 @@
       window.__removableText = document.getElementById('removable').firstChild;
       window.__targetText = document.getElementById('target').firstChild;
 
+      // Like most real components, these set their own font, which page styles can't override.
+      const OWN_FONT = '<style>p { font-family: Georgia, serif; }</style>';
       customElements.define('open-box', class extends HTMLElement {
         constructor() {
           super();
-          this.attachShadow({ mode: 'open' }).innerHTML = '<p>Open shadow words</p>';
+          this.attachShadow({ mode: 'open' }).innerHTML = `${OWN_FONT}<p>Open shadow words</p>`;
         }
       });
       customElements.define('closed-box', class extends HTMLElement {
         constructor() {
           super();
           const root = this.attachShadow({ mode: 'closed' });
-          root.innerHTML = '<p>Closed shadow words</p>';
+          root.innerHTML = `${OWN_FONT}<p>Closed shadow words</p>`;
           window.__closedRoot = root;
         }
       });
@@ -60,7 +62,7 @@
           constructor() {
             super();
             const root = this.attachShadow({ mode: 'closed' });
-            root.innerHTML = '<p>Late shadow words</p>';
+            root.innerHTML = `${OWN_FONT}<p>Late shadow words</p>`;
             window.__lateRoot = root;
           }
         });

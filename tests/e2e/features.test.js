@@ -84,6 +84,35 @@ test('page font and spacing apply to the page and its shadow DOM, even under a s
   }
 });
 
+test('without bionic emphasis the page font still reaches open, closed and late shadow roots', async () => {
+  await env.setSettings({ bionic: false, font: 'atkinson' });
+  const { page, errors } = await env.openPage('basic.html');
+  const fontIn = (expression) =>
+    page.waitForFunction((expr) => {
+      const p = eval(expr); // eslint-disable-line no-eval
+      return p && getComputedStyle(p).fontFamily.includes('ADHDR Atkinson');
+    }, expression);
+  await fontIn("document.querySelector('#open-box').shadowRoot.querySelector('p')");
+  await fontIn("window.__closedRoot.querySelector('p')");
+  // Added later, and defined (given its shadow root) after it was added.
+  await page.evaluate(() => {
+    const box = document.createElement('open-box');
+    box.id = 'added-box';
+    document.body.append(box);
+  });
+  await fontIn("document.querySelector('#added-box').shadowRoot.querySelector('p')");
+  await page.evaluate(() => window.defineLateBox());
+  await fontIn("window.__lateRoot.querySelector('p')");
+  assert.equal(await exists(page, 'adhdrb'), false);
+  assert.equal(await page.evaluate(() => window.__closedRoot.querySelector('adhdrb')), null);
+
+  // Back to the site's font: the shadow roots follow.
+  await env.setSettings({ font: 'site' });
+  await page.waitForFunction(() => !getComputedStyle(window.__closedRoot.querySelector('p')).fontFamily.includes('ADHDR'));
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test('tint and dim overlay, focus on the line or paragraph under the mouse', async () => {
   const { page, errors } = await env.openPage('basic.html');
   await waitForBold(page, '#plain');
@@ -214,6 +243,61 @@ test('reader view works where the extension is off and under a strict CSP; says 
   assert.match(await toast.textContent(), /main text/);
   assert.equal(await exists(empty.page, READER), false);
   await empty.page.close();
+});
+
+test('reader view on Google Docs and Slides reads the document through their export', async () => {
+  // Docs draws its text on a canvas; the reader asks Docs' export for the same document instead.
+  const docHtml = `<html><head><style>.c1 { color: red; }</style></head><body class="c5">
+    <p class="title"><span>Quarterly plan</span></p>
+    <h1 id="h.1"><span>Goals for the team</span></h1>
+    <p class="c1"><span>We will focus on fewer projects and finish them properly before starting new ones, so that every person on the team knows what matters this quarter.</span></p>
+    <p class="c1"><span>Каждая задача получает владельца и срок, а еженедельные встречи становятся короче и спокойнее.</span></p>
+    <script>window.__exportScript = true;</script></body></html>`;
+  const requests = [];
+  await env.context.route('https://docs.google.com/**', (route) => {
+    const url = route.request().url();
+    requests.push(url.replace(/^https:\/\/docs\.google\.com/, ''));
+    if (url.endsWith('/export?format=html')) return route.fulfill({ contentType: 'text/html; charset=utf-8', body: docHtml });
+    if (url.endsWith('/export/txt')) return route.fulfill({ contentType: 'text/plain; charset=utf-8', body: 'Slide one title\n\nSpeaker points for the first slide go here and explain the idea in plain words for everyone.\n\nSecond slide' });
+    const title = url.includes('/presentation/') ? 'Team deck - Google Slides' : 'Quarterly plan - Google Docs';
+    return route.fulfill({ contentType: 'text/html', body: `<!doctype html><title>${title}</title><body><canvas width="800" height="600"></canvas></body>` });
+  });
+  try {
+    const page = await env.context.newPage();
+    await page.goto('https://docs.google.com/document/d/1AbC_dEf-123/edit?tab=t.0');
+    await settledStatus(page);
+    assert.equal(await toggleReader(page), true);
+    await page.waitForFunction((sel) => document.querySelector(sel)?.shadowRoot?.querySelector('.content adhdrb'), READER);
+    const reader = await page.$eval(READER, (host) => ({
+      title: host.shadowRoot.querySelector('.title').textContent,
+      meta: host.shadowRoot.querySelector('.meta').textContent,
+      headings: [...host.shadowRoot.querySelectorAll('.content h1')].map((h) => h.textContent),
+      text: host.shadowRoot.querySelector('.content').textContent,
+      styles: host.shadowRoot.querySelectorAll('.content style, .content script').length,
+    }));
+    assert.equal(reader.title, 'Quarterly plan');
+    assert.match(reader.meta, /^Google Docs · /);
+    assert.deepEqual(reader.headings, ['Goals for the team']);
+    assert.match(reader.text, /Каждая задача получает владельца/);
+    assert.equal(reader.styles, 0);
+    assert.equal(await page.evaluate(() => window.__exportScript), undefined);
+    assert.ok(requests.includes('/document/d/1AbC_dEf-123/export?format=html'), requests.join(' '));
+    await page.close();
+
+    const slides = await env.context.newPage();
+    await slides.goto('https://docs.google.com/presentation/d/XyZ987/edit#slide=id.p');
+    await settledStatus(slides);
+    assert.equal(await toggleReader(slides), true);
+    await slides.waitForFunction((sel) => document.querySelector(sel)?.shadowRoot?.querySelector('.content adhdrb'), READER);
+    assert.deepEqual(
+      await slides.$eval(READER, (host) => [...host.shadowRoot.querySelectorAll('.content p')].map((p) => p.textContent)),
+      ['Slide one title', 'Speaker points for the first slide go here and explain the idea in plain words for everyone.', 'Second slide'],
+    );
+    assert.equal(await slides.$eval(READER, (host) => host.shadowRoot.querySelector('.title').textContent), 'Team deck');
+    await slides.close();
+  } finally {
+    await env.context.unroute('https://docs.google.com/**');
+  }
 });
 
 test('every suggested keyboard shortcut is actually assigned by Chrome', async () => {

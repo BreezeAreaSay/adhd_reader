@@ -534,5 +534,11 @@
   },
   "openViewer": {
     "message": "Open the viewer"
+  },
+  "noticeGoogleDocs": {
+    "message": "Google Docs draws the document on a canvas, which extensions can’t restyle. Press “Reader view” to read it with all the modes."
+  },
+  "noticeCanvas": {
+    "message": "This app draws its content on a canvas, so extensions can’t change that text. Its menus and panels still work."
   }
 }
