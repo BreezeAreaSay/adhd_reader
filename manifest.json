@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "short_name": "ADHD Reader",
   "description": "__MSG_extDescription__",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "default_locale": "en",
   "minimum_chrome_version": "111",
   "icons": {
@@ -47,9 +47,22 @@
         "src/content/font-faces.js",
         "src/content/typography.js",
         "src/content/overlay.js",
+        "src/content/page-kind.js",
         "src/content/main.js"
       ],
-      "run_at": "document_idle",
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_origin_as_fallback": true
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content/hydration-probe.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
       "all_frames": true,
       "match_origin_as_fallback": true
     }

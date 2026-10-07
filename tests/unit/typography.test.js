@@ -27,3 +27,12 @@ test('every font stack points at bundled faces that exist', () => {
   const css = T.fontFaceCss((file) => `chrome-extension://id/fonts/${file}`);
   assert.match(css, /@font-face \{ font-family: "ADHDR PT Sans"; font-style: normal; font-weight: 400;.*unicode-range: U\+0301,U\+0400-045F/);
 });
+
+test('the dyslexia-friendly fonts cover Cyrillic', () => {
+  const faces = globalThis.ADHDR.FONT_FACES;
+  const andika = faces.filter((f) => f.family === 'ADHDR Andika');
+  assert.ok(andika.some((f) => /U\+0400-045F/.test(f.range)), 'Andika has a Cyrillic face');
+  // OpenDyslexic ships as one file per weight with Cyrillic inside, so its faces have no unicode-range.
+  const openDyslexic = faces.filter((f) => f.family === 'ADHDR OpenDyslexic');
+  assert.ok(openDyslexic.length >= 2 && openDyslexic.every((f) => !f.range));
+});

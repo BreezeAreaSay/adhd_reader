@@ -8,11 +8,11 @@
     return chrome.i18n.getMessage(key, substitutions) || key;
   }
 
-  /** Fills elements marked with data-i18n / data-i18n-title / data-i18n-placeholder / data-i18n-aria-label. */
+  /** Fills elements marked with data-i18n and data-i18n-{title,placeholder,aria-label,label}. */
   function localize(scope = document) {
     document.documentElement.lang = chrome.i18n.getUILanguage();
     for (const el of scope.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
-    for (const attr of ['title', 'placeholder', 'aria-label']) {
+    for (const attr of ['title', 'placeholder', 'aria-label', 'label']) {
       const dataKey = `i18n${attr.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase())}`;
       for (const el of scope.querySelectorAll(`[data-i18n-${attr}]`)) el.setAttribute(attr, t(el.dataset[dataKey]));
     }

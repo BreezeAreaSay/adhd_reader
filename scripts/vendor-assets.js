@@ -19,7 +19,9 @@ const FONTS = [
     subsets: ['latin', 'latin-ext'],
   },
   { family: 'ADHDR Lexend', pkg: '@fontsource-variable/lexend', css: ['wght.css'], subsets: ['latin', 'latin-ext'] },
+  // Fontsource calls OpenDyslexic's only file "latin", but it also has full Cyrillic (and no unicode-range).
   { family: 'ADHDR OpenDyslexic', pkg: '@fontsource/opendyslexic', css: ['400.css', '700.css'], subsets: ['latin'] },
+  { family: 'ADHDR Andika', pkg: '@fontsource/andika', css: ['400.css', '700.css', '400-italic.css'], subsets: ['latin', 'cyrillic'] },
   { family: 'ADHDR PT Sans', pkg: '@fontsource/pt-sans', css: ['400.css', '700.css', '400-italic.css'], subsets: ['latin', 'cyrillic'] },
 ];
 

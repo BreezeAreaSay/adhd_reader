@@ -4,7 +4,7 @@
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { setupExtension, boldParts, waitForBold } = require('./helpers');
+const { setupExtension, boldParts, waitForBold, exists } = require('./helpers');
 
 const env = setupExtension();
 
@@ -49,7 +49,7 @@ test('"only on these sites" mode', async () => {
   await env.setSettings({ siteMode: 'only', enabledSites: ['example.com'] });
   const { page } = await env.openPage('basic.html');
   assert.equal((await settledStatus(page)).active, false);
-  assert.equal(await page.$('adhdrw'), null);
+  assert.equal(await exists(page, 'adhdrw'), false);
 
   await env.setSettings({ enabledSites: ['example.com', '127.0.0.1'] });
   await waitForBold(page, '#plain');
@@ -203,7 +203,7 @@ test('reader view works where the extension is off and under a strict CSP; says 
   assert.notEqual(background, 'rgba(0, 0, 0, 0)', 'reader styles must apply despite the CSP');
   assert.equal(await toggleReader(page), true); // toggles it closed again
   await page.waitForSelector(READER, { state: 'detached' });
-  assert.equal(await page.$('adhdrw'), null, 'the page itself stays untouched');
+  assert.equal(await exists(page, 'adhdrw'), false, 'the page itself stays untouched');
   assert.deepEqual(errors, []);
   await page.close();
 
@@ -212,7 +212,7 @@ test('reader view works where the extension is off and under a strict CSP; says 
   assert.equal(await toggleReader(empty.page), true);
   const toast = await empty.page.waitForSelector('[data-adhdr-ui="toast"]');
   assert.match(await toast.textContent(), /main text/);
-  assert.equal(await empty.page.$(READER), null);
+  assert.equal(await exists(empty.page, READER), false);
   await empty.page.close();
 });
 
@@ -224,4 +224,31 @@ test('every suggested keyboard shortcut is actually assigned by Chrome', async (
     if (!command.suggested_key) continue;
     assert.equal(assigned[name], command.suggested_key.default, `${name} shortcut`);
   }
+});
+
+test('Cyrillic is drawn by OpenDyslexic and Andika themselves, and by PT Sans for Latin-only fonts', async () => {
+  const page = await env.context.newPage();
+  await page.goto(`chrome-extension://${env.extensionId}/src/options/options.html`);
+  const widths = await page.evaluate(async () => {
+    ADHDR.ensureFontFaces(document);
+    const text = 'Съешь же ещё этих мягких французских булок, да выпей чаю';
+    const families = ['ADHDR OpenDyslexic', 'ADHDR Andika', 'ADHDR PT Sans'];
+    await Promise.all(families.map((family) => document.fonts.load(`20px "${family}"`, text)));
+    const context = document.createElement('canvas').getContext('2d');
+    const width = (font) => {
+      context.font = `20px ${font}`;
+      return Math.round(context.measureText(text).width);
+    };
+    return {
+      fallback: width('monospace'),
+      openDyslexic: width('"ADHDR OpenDyslexic", monospace'),
+      andika: width('"ADHDR Andika", monospace'),
+      ptSans: width('"ADHDR PT Sans", monospace'),
+      atkinsonStack: width(ADHDR.fontStack('atkinson')),
+    };
+  });
+  assert.notEqual(widths.openDyslexic, widths.fallback, 'OpenDyslexic draws Cyrillic itself');
+  assert.notEqual(widths.andika, widths.fallback, 'Andika draws Cyrillic itself');
+  assert.equal(widths.atkinsonStack, widths.ptSans, 'Atkinson falls back to PT Sans for Cyrillic');
+  await page.close();
 });

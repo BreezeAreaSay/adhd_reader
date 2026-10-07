@@ -133,7 +133,7 @@
     "message": "С засечками"
   },
   "fontHint": {
-    "message": "В Atkinson Hyperlegible, Lexend и OpenDyslexic только латиница — кириллица показывается шрифтом PT Sans."
+    "message": "OpenDyslexic создан для людей с дислексией; у Andika чёткие буквы, которые трудно перепутать. Оба поддерживают кириллицу. В Atkinson Hyperlegible и Lexend только латиница — русские буквы показываются шрифтом PT Sans."
   },
   "lineHeightLabel": {
     "message": "Межстрочный интервал"
@@ -373,5 +373,17 @@
   },
   "aboutText": {
     "message": "Настройки синхронизируются через ваш профиль Chrome."
+  },
+  "fontGroupCyrillic": {
+    "message": "С кириллицей"
+  },
+  "fontGroupLatin": {
+    "message": "Только латиница (русский текст — шрифтом PT Sans)"
+  },
+  "font_opendyslexic": {
+    "message": "OpenDyslexic — для дислексии"
+  },
+  "font_andika": {
+    "message": "Andika — чёткие, различимые буквы"
   }
 }

@@ -10,11 +10,13 @@
 
   const ns = root.ADHDR || (root.ADHDR = {});
 
-  // Lexend, Atkinson and OpenDyslexic have no Cyrillic: PT Sans fills in for those letters.
+  // OpenDyslexic, Andika and PT Sans cover Cyrillic. Atkinson and Lexend are Latin-only: PT Sans fills
+  // in for Cyrillic letters there.
   const FONT_STACKS = Object.freeze({
+    opendyslexic: '"ADHDR OpenDyslexic", "ADHDR PT Sans", system-ui, sans-serif',
+    andika: '"ADHDR Andika", "ADHDR PT Sans", system-ui, sans-serif',
     atkinson: '"ADHDR Atkinson", "ADHDR PT Sans", system-ui, sans-serif',
     lexend: '"ADHDR Lexend", "ADHDR PT Sans", system-ui, sans-serif',
-    opendyslexic: '"ADHDR OpenDyslexic", "ADHDR PT Sans", system-ui, sans-serif',
     ptsans: '"ADHDR PT Sans", system-ui, sans-serif',
     system: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     serif: 'Georgia, "PT Serif", Cambria, "Times New Roman", serif',

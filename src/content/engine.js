@@ -40,6 +40,10 @@
   const RESCAN_DELAYS_MS = [2000, 8000]; // catch shadow roots attached after the first pass
   const MIN_BUDGET_MS = 6;
   const MAX_BUDGET_MS = 30;
+  // Right after start the visible text should change quickly, so the first pass runs in short
+  // back-to-back tasks instead of waiting for idle time (which a busy page may not have).
+  const URGENT_WINDOW_MS = 1500;
+  const URGENT_BUDGET_MS = 16;
   const MAX_RENDERS = 12; // per text node within RENDER_WINDOW_MS; beyond that we leave it alone
   const RENDER_WINDOW_MS = 3000;
   const HEAVY_WEIGHT = 600; // text at least this bold gets the "heavy" emphasis
@@ -69,6 +73,8 @@
     let templates = null;
     let active = false;
     let scheduled = false;
+    let urgentUntil = 0;
+    let deferred = null; // nodes (with their subtrees) the page isn't done with yet; see defer()
     const rescanTimers = [];
 
     const observer = new MutationObserver(onMutations);
@@ -102,6 +108,7 @@
       // Chrome shows .txt files as <body><pre>…</pre></body>; that <pre> is prose, not code.
       isPlainTextDocument = doc.contentType === 'text/plain';
       templates = Bionic.createTemplates(doc, settings);
+      urgentUntil = performance.now() + URGENT_WINDOW_MS;
       addRoot(baseRoot);
       if (baseRoot === doc) {
         for (const delay of RESCAN_DELAYS_MS) rescanTimers.push(setTimeout(rescanAll, delay));
@@ -119,6 +126,21 @@
       textQueueHead = 0;
       restoreAll();
       roots.clear();
+    }
+
+    /**
+     * Leaves `nodes` and everything inside them alone until release() — used for React <Suspense>
+     * boundaries that are still waiting to be hydrated while the rest of the page already is.
+     */
+    function defer(nodes) {
+      deferred ??= new WeakSet();
+      for (const node of nodes) deferred.add(node);
+    }
+
+    function release() {
+      if (!deferred) return;
+      deferred = null;
+      if (active) enqueueScan(baseRoot);
     }
 
     function addRoot(node) {
@@ -144,7 +166,8 @@
     function schedule() {
       if (scheduled || !active) return;
       scheduled = true;
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(runChunk, { timeout: 200 });
+      if (performance.now() < urgentUntil) setTimeout(runChunk, 0, null, URGENT_BUDGET_MS);
+      else if (typeof requestIdleCallback === 'function') requestIdleCallback(runChunk, { timeout: 200 });
       else setTimeout(runChunk, 16);
     }
 
@@ -152,11 +175,11 @@
       return dirtyText.size > 0 || textQueueHead < textQueue.length || scanQueue.length > 0;
     }
 
-    function runChunk(deadline) {
+    function runChunk(deadline, budget) {
       scheduled = false;
       if (!active) return;
       const idle = deadline && typeof deadline.timeRemaining === 'function' ? deadline.timeRemaining() : 0;
-      const stopAt = performance.now() + Math.min(Math.max(idle, MIN_BUDGET_MS), MAX_BUDGET_MS);
+      const stopAt = performance.now() + (budget || Math.min(Math.max(idle, MIN_BUDGET_MS), MAX_BUDGET_MS));
       heavyCache = new Map();
 
       mutateQuietly(() => {
@@ -255,6 +278,7 @@
     // -------------------------------------------------------------------------------------------
 
     function shouldSkipElement(el) {
+      if (deferred?.has(el)) return true;
       const tag = el.localName;
       if (SKIP_TAGS.has(tag)) return true;
       if (CODE_TAGS.has(tag) && settings.skipCode && !(isPlainTextDocument && tag === 'pre')) return true;
@@ -269,6 +293,7 @@
 
     /** True if `node` or an ancestor up to our root (crossing shadow boundaries) must not be touched. */
     function isInSkippedSubtree(node) {
+      if (deferred?.has(node)) return true;
       let current = node.nodeType === ELEMENT_NODE ? node : node.parentNode;
       while (current && current !== baseRoot) {
         if (current.nodeType === ELEMENT_NODE) {
@@ -285,6 +310,7 @@
 
     function walkFilter(node) {
       if (node.nodeType === TEXT_NODE) {
+        if (deferred?.has(node)) return NodeFilter.FILTER_SKIP;
         return node.data && Bionic.hasWords(node.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       }
       return shouldSkipElement(node) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
@@ -444,6 +470,8 @@
 
     return {
       update,
+      defer,
+      release,
       isActive: () => active,
       roots: () => [...roots],
     };

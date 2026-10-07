@@ -58,7 +58,7 @@
 
   const CHOICES = Object.freeze({
     siteMode: ['all', 'only'],
-    font: ['site', 'atkinson', 'lexend', 'opendyslexic', 'ptsans', 'system', 'serif'],
+    font: ['site', 'opendyslexic', 'andika', 'ptsans', 'atkinson', 'lexend', 'system', 'serif'],
     tint: ['none', 'cream', 'peach', 'yellow', 'green', 'blue', 'rose', 'gray'],
     focus: ['off', 'line', 'paragraph'],
     readerTheme: ['auto', 'light', 'sepia', 'dark'],

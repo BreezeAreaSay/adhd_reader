@@ -208,16 +208,16 @@ test('re-injecting the content script hands over cleanly (extension update in op
   const { page, errors } = await openPage('basic.html');
   await waitForBold(page, '#plain');
   const before = await page.$eval('#plain', (p) => p.innerHTML);
+  await page.$eval('#plain adhdrw', (w) => (window.__oldWrapper = w));
 
   const tabId = await env.tabIdOf(page);
   await env.worker.evaluate(
     (id) => chrome.scripting.executeScript({ target: { tabId: id, allFrames: true }, files: chrome.runtime.getManifest().content_scripts[0].js }),
     tabId,
   );
-  // The old copy restored the page synchronously; the new one is still waiting for the page to settle.
-  assert.equal(await page.$eval('#plain', (p) => p.querySelector('adhdrw') === null && p.textContent.startsWith('Bionic')), true);
-
+  // The old copy restored the page (its wrapper is gone) and the new copy processed it again.
   await page.waitForFunction((html) => document.querySelector('#plain adhdrb') && document.querySelector('#plain').innerHTML === html, before, { timeout: 8000 });
+  assert.equal(await page.evaluate(() => window.__oldWrapper.isConnected), false);
   assert.equal(await page.$$eval('#plain adhdrw', (w) => w.length), 1);
   assert.equal(await textOf(page, '#plain'), 'Bionic reading helps the eyes move through text. Привет, это русский текст для проверки.');
   assert.deepEqual(errors, []);

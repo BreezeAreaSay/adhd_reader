@@ -133,7 +133,7 @@
     "message": "Serif"
   },
   "fontHint": {
-    "message": "Atkinson Hyperlegible, Lexend and OpenDyslexic have Latin letters only; Cyrillic is shown in PT Sans."
+    "message": "OpenDyslexic is made for readers with dyslexia; Andika has clear letterforms that are hard to confuse. Both cover Cyrillic. Atkinson Hyperlegible and Lexend have Latin letters only — Cyrillic is shown in PT Sans."
   },
   "lineHeightLabel": {
     "message": "Line spacing"
@@ -373,5 +373,17 @@
   },
   "aboutText": {
     "message": "Settings are synced through your Chrome profile."
+  },
+  "fontGroupCyrillic": {
+    "message": "With Cyrillic"
+  },
+  "fontGroupLatin": {
+    "message": "Latin only (Cyrillic shown in PT Sans)"
+  },
+  "font_opendyslexic": {
+    "message": "OpenDyslexic — made for dyslexia"
+  },
+  "font_andika": {
+    "message": "Andika — clear, distinct letters"
   }
 }

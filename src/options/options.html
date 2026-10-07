@@ -100,12 +100,17 @@
               <span data-i18n="fontLabel">Font</span>
               <select data-setting="font">
                 <option value="site" data-i18n="font_site">As on the site</option>
-                <option value="atkinson">Atkinson Hyperlegible</option>
-                <option value="lexend">Lexend</option>
-                <option value="opendyslexic">OpenDyslexic</option>
-                <option value="ptsans">PT Sans</option>
-                <option value="system" data-i18n="font_system">System</option>
-                <option value="serif" data-i18n="font_serif">Serif</option>
+                <optgroup data-i18n-label="fontGroupCyrillic">
+                  <option value="opendyslexic" data-i18n="font_opendyslexic">OpenDyslexic</option>
+                  <option value="andika" data-i18n="font_andika">Andika</option>
+                  <option value="ptsans">PT Sans</option>
+                  <option value="system" data-i18n="font_system">System</option>
+                  <option value="serif" data-i18n="font_serif">Serif</option>
+                </optgroup>
+                <optgroup data-i18n-label="fontGroupLatin">
+                  <option value="atkinson">Atkinson Hyperlegible</option>
+                  <option value="lexend">Lexend</option>
+                </optgroup>
               </select>
               <p class="hint" data-i18n="fontHint"></p>
             </label>
