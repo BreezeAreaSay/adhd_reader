@@ -18,20 +18,34 @@
     }
   }
 
+  const percent = (v) => `${v}%`;
   const FORMATTERS = {
-    fixation: (v) => `${v}%`,
-    fade: (v) => (v >= 100 ? t('fadeOff') : `${v}%`),
+    fixation: percent,
+    fade: (v) => (v >= 100 ? t('valueNormal') : `${v}%`),
+    saccade: (v) => (v === 1 ? t('saccadeEvery') : t('saccadeNth', [String(v)])),
+    minWordLength: (v) => (v === 1 ? t('valueAllWords') : t('minWordLengthValue', [String(v)])),
+    lineHeight: (v) => (v <= 100 ? t('valueSite') : (v / 100).toFixed(1)),
+    letterSpacing: (v) => (v === 0 ? t('valueNormal') : `+${(v / 100).toFixed(2)} em`),
+    wordSpacing: (v) => (v === 0 ? t('valueNormal') : `+${(v / 100).toFixed(2)} em`),
+    tintStrength: percent,
+    dim: (v) => (v === 0 ? t('valueOff') : `${v}%`),
+    focusDim: percent,
+    readerFontSize: (v) => `${v} px`,
+    readerWidth: (v) => t('readerWidthValue', [String(v)]),
   };
+
+  function isNumeric(value) {
+    return value !== '' && !Number.isNaN(Number(value));
+  }
 
   function readInput(el) {
     if (el.type === 'checkbox') return el.checked;
-    if (el.type === 'radio' || el.type === 'range' || el.type === 'number') return Number(el.value);
-    return el.value;
+    return isNumeric(el.value) ? Number(el.value) : el.value;
   }
 
   function writeInput(el, value) {
     if (el.type === 'checkbox') el.checked = Boolean(value);
-    else if (el.type === 'radio') el.checked = Number(el.value) === value;
+    else if (el.type === 'radio') el.checked = el.value === String(value);
     else el.value = value;
   }
 
@@ -53,16 +67,21 @@
         const key = out.dataset.output;
         out.textContent = (FORMATTERS[key] || String)(settings[key]);
       }
+      // data-show-if="key=value" / data-hide-if="key=value" toggle dependent controls.
+      for (const el of scope.querySelectorAll('[data-show-if], [data-hide-if]')) {
+        const [key, value] = (el.dataset.showIf || el.dataset.hideIf).split('=');
+        el.hidden = (String(settings[key]) === value) === Boolean(el.dataset.hideIf);
+      }
       onUpdate?.(settings, { draft });
     }
 
     for (const el of inputs) {
       const key = el.dataset.setting;
       el.addEventListener('input', () => {
-        if (current) show({ ...current, [key]: readInput(el) }, { draft: true });
+        if (current && (el.type !== 'radio' || el.checked)) show({ ...current, [key]: readInput(el) }, { draft: true });
       });
       el.addEventListener('change', () => {
-        ADHDR.saveSettings({ [key]: readInput(el) });
+        if (el.type !== 'radio' || el.checked) ADHDR.saveSettings({ [key]: readInput(el) });
       });
     }
 
@@ -71,18 +90,37 @@
     return { get: () => current };
   }
 
-  /** Renders `text` (paragraphs separated by blank lines) with the emphasis the page would get. */
+  /**
+   * Renders `text` (paragraphs separated by blank lines) the way a page would look with `settings`:
+   * bionic emphasis, font, spacing and tint.
+   */
   function renderPreview(container, text, settings) {
     const templates = ADHDR.Bionic.createTemplates(document, settings);
     container.replaceChildren();
     for (const paragraph of text.split(/\n\s*\n/)) {
       const p = document.createElement('p');
-      const fragment = ADHDR.Bionic.buildFragment(document, paragraph.trim(), settings, templates);
+      const fragment = settings.bionic ? ADHDR.Bionic.buildFragment(document, paragraph.trim(), settings, templates) : null;
       p.append(fragment || paragraph.trim());
       container.append(p);
     }
+    const stack = ADHDR.fontStack(settings.font);
+    if (stack && !['system', 'serif'].includes(settings.font)) ADHDR.ensureFontFaces(document);
+    container.style.fontFamily = stack || '';
+    container.style.lineHeight = settings.lineHeight > 100 ? String(settings.lineHeight / 100) : '';
+    container.style.letterSpacing = settings.letterSpacing ? `${settings.letterSpacing / 100}em` : '';
+    container.style.wordSpacing = settings.wordSpacing ? `${settings.wordSpacing / 100}em` : '';
+    const tint = ADHDR.TINT_COLORS[settings.tint];
+    container.style.backgroundColor = tint ? `color-mix(in srgb, ${tint} ${settings.tintStrength}%, var(--surface))` : '';
     container.classList.toggle('is-off', !settings.enabled);
   }
 
-  root.ADHDR.ui = { t, localize, bindSettings, renderPreview };
+  /** Paints tint swatches (radio labels with data-tint) in their colours. */
+  function paintSwatches(scope = document) {
+    for (const swatch of scope.querySelectorAll('[data-tint]')) {
+      const color = ADHDR.TINT_COLORS[swatch.dataset.tint];
+      if (color) swatch.style.setProperty('--swatch', color);
+    }
+  }
+
+  root.ADHDR.ui = { t, localize, bindSettings, renderPreview, paintSwatches };
 })(globalThis);

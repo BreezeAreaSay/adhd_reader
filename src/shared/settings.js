@@ -1,5 +1,5 @@
 /*
- * Settings model shared by the content script, background worker, popup and options page.
+ * Settings model shared by the content scripts, background worker, popup and options page.
  * Loaded as a classic script everywhere (content scripts can't be ES modules), so it attaches to
  * the global `ADHDR` namespace; it also exports for Node so the unit tests can use it.
  */
@@ -8,17 +8,73 @@
 
   const DEFAULTS = Object.freeze({
     enabled: true,
+    siteMode: 'all', // 'all': everywhere except disabledSites; 'only': only on enabledSites
+    disabledSites: Object.freeze([]),
+    enabledSites: Object.freeze([]),
+
+    // Bionic emphasis
+    bionic: true,
     fixation: 50, // % of each word's letters to make bold
     weight: 700, // font-weight of the emphasised part
     fade: 100, // opacity (%) of the rest of the word; 100 = not faded
+    saccade: 1, // emphasise every N-th word
+    minWordLength: 1, // leave shorter words alone
     skipCode: true, // leave <code>, <pre>, <kbd>… untouched
-    disabledSites: Object.freeze([]), // site keys (see siteKeyFromUrl) where the extension is off
+
+    // Page look
+    font: 'site',
+    lineHeight: 100, // % of the font size; 100 = keep the site's
+    letterSpacing: 0, // hundredths of an em
+    wordSpacing: 0, // hundredths of an em
+    tint: 'none',
+    tintStrength: 35, // %
+    dim: 0, // % darkening of the whole page
+
+    // Focus
+    focus: 'off', // 'off' | 'line' | 'paragraph'
+    focusDim: 55, // % darkening outside the focused line/paragraph
+
+    // Reader mode
+    readerTheme: 'auto',
+    readerFontSize: 20, // px
+    readerWidth: 68, // characters per line
   });
 
   const LIMITS = Object.freeze({
     fixation: [10, 90],
     weight: [400, 900],
     fade: [20, 100],
+    saccade: [1, 4],
+    minWordLength: [1, 5],
+    lineHeight: [100, 240],
+    letterSpacing: [0, 20],
+    wordSpacing: [0, 50],
+    tintStrength: [10, 80],
+    dim: [0, 70],
+    focusDim: [20, 85],
+    readerFontSize: [14, 34],
+    readerWidth: [45, 100],
+  });
+
+  const CHOICES = Object.freeze({
+    siteMode: ['all', 'only'],
+    font: ['site', 'atkinson', 'lexend', 'opendyslexic', 'ptsans', 'system', 'serif'],
+    tint: ['none', 'cream', 'peach', 'yellow', 'green', 'blue', 'rose', 'gray'],
+    focus: ['off', 'line', 'paragraph'],
+    readerTheme: ['auto', 'light', 'sepia', 'dark'],
+  });
+
+  const BOOLEANS = ['enabled', 'bionic', 'skipCode'];
+
+  // Light colours multiplied over the page, like coloured paper.
+  const TINT_COLORS = Object.freeze({
+    cream: '#fff1cf',
+    peach: '#ffd9c2',
+    yellow: '#fff59a',
+    green: '#d5f2cc',
+    blue: '#cfe4ff',
+    rose: '#ffd3df',
+    gray: '#dcdcdc',
   });
 
   function clampInt(value, [min, max], fallback) {
@@ -65,15 +121,27 @@
     return siteKey === entry || siteKey.endsWith(`.${entry}`);
   }
 
-  function isSiteDisabled(settings, siteKey) {
-    return Boolean(siteKey) && settings.disabledSites.some((entry) => siteMatches(siteKey, entry));
+  function listCovers(list, siteKey) {
+    return Boolean(siteKey) && list.some((entry) => siteMatches(siteKey, entry));
   }
 
-  /** Returns a new disabled-sites list with `siteKey` switched off (disabled=true) or back on. */
-  function setSiteDisabled(list, siteKey, disabled) {
+  /** Whether the per-site rules allow the extension on `siteKey` (ignores the global switch). */
+  function isSiteActive(settings, siteKey) {
+    if (settings.siteMode === 'only') return listCovers(settings.enabledSites, siteKey);
+    return !listCovers(settings.disabledSites, siteKey);
+  }
+
+  /** Returns a new site list with `siteKey` added (include=true) or removed with its parent domains. */
+  function updateSiteList(list, siteKey, include) {
     if (!siteKey) return list.slice();
-    if (!disabled) return list.filter((entry) => !siteMatches(siteKey, entry));
-    return list.some((entry) => siteMatches(siteKey, entry)) ? list.slice() : [...list, siteKey];
+    if (!include) return list.filter((entry) => !siteMatches(siteKey, entry));
+    return listCovers(list, siteKey) ? list.slice() : [...list, siteKey];
+  }
+
+  /** Settings patch that turns the extension on or off for `siteKey` in the current site mode. */
+  function sitePatch(settings, siteKey, on) {
+    if (settings.siteMode === 'only') return { enabledSites: updateSiteList(settings.enabledSites, siteKey, on) };
+    return { disabledSites: updateSiteList(settings.disabledSites, siteKey, !on) };
   }
 
   function normalizeSiteList(list) {
@@ -87,14 +155,14 @@
 
   function normalizeSettings(raw) {
     const src = raw && typeof raw === 'object' ? raw : {};
-    return {
-      enabled: typeof src.enabled === 'boolean' ? src.enabled : DEFAULTS.enabled,
-      fixation: clampInt(src.fixation, LIMITS.fixation, DEFAULTS.fixation),
-      weight: Math.round(clampInt(src.weight, LIMITS.weight, DEFAULTS.weight) / 100) * 100,
-      fade: clampInt(src.fade, LIMITS.fade, DEFAULTS.fade),
-      skipCode: typeof src.skipCode === 'boolean' ? src.skipCode : DEFAULTS.skipCode,
-      disabledSites: normalizeSiteList(src.disabledSites),
-    };
+    const out = {};
+    for (const key of BOOLEANS) out[key] = typeof src[key] === 'boolean' ? src[key] : DEFAULTS[key];
+    for (const [key, range] of Object.entries(LIMITS)) out[key] = clampInt(src[key], range, DEFAULTS[key]);
+    out.weight = Math.round(out.weight / 100) * 100;
+    for (const [key, options] of Object.entries(CHOICES)) out[key] = options.includes(src[key]) ? src[key] : DEFAULTS[key];
+    out.disabledSites = normalizeSiteList(src.disabledSites);
+    out.enabledSites = normalizeSiteList(src.enabledSites);
+    return out;
   }
 
   // --- chrome.storage wrappers (sync storage, so settings follow the user's Chrome profile) ---
@@ -116,21 +184,29 @@
     return normalizeSettings({});
   }
 
-  /** Calls `callback(settings)` with the full, normalised settings whenever they change. */
+  /**
+   * Calls `callback(settings)` with the full, normalised settings whenever they change.
+   * Returns a function that stops listening.
+   */
   function onSettingsChanged(callback) {
-    chrome.storage.onChanged.addListener((changes, area) => {
+    const listener = (changes, area) => {
       if (area === 'sync') loadSettings().then(callback);
-    });
+    };
+    chrome.storage.onChanged.addListener(listener);
+    return () => chrome.storage.onChanged.removeListener(listener);
   }
 
   const api = {
     DEFAULTS,
     LIMITS,
+    CHOICES,
+    TINT_COLORS,
     normalizeSettings,
     normalizeSite,
     siteKeyFromUrl,
-    isSiteDisabled,
-    setSiteDisabled,
+    isSiteActive,
+    updateSiteList,
+    sitePatch,
     loadSettings,
     saveSettings,
     resetSettings,

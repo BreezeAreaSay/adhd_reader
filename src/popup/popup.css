@@ -1,13 +1,31 @@
 body {
-  width: 340px;
-  padding: 14px;
+  width: 360px;
+  padding: 12px 14px;
+}
+
+/* Chrome caps popups at 600px height: keep everything compact. */
+.card {
+  padding: 12px 14px;
+}
+
+.control {
+  row-gap: 4px;
+}
+
+.control + .control {
+  margin-top: 12px;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
 }
 
 .head {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .head h1 {
@@ -17,7 +35,7 @@ body {
 
 main {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .site {
@@ -42,11 +60,61 @@ main {
   white-space: nowrap;
 }
 
+.actions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.segmented.focus {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.segmented.focus span {
+  font-size: 13px;
+  padding: 5px 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: -4px;
+}
+
+.tabs button {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tabs button[aria-selected="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.preview {
+  max-height: 92px;
+  overflow: hidden;
+  font-size: 14px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}
+
 .foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 12.5px;
 }

@@ -3,7 +3,7 @@
     "message": "ADHD Reader"
   },
   "extDescription": {
-    "message": "Bold word beginnings (bionic-style reading) on every website, including dynamic pages, shadow DOM and frames."
+    "message": "Bionic-style reading on every site, plus reader view, a focus ruler, readable fonts and page tints."
   },
   "actionTitle": {
     "message": "ADHD Reader"
@@ -13,6 +13,21 @@
   },
   "cmdToggleGlobal": {
     "message": "Turn on/off everywhere"
+  },
+  "cmdToggleReader": {
+    "message": "Open/close reader view"
+  },
+  "cmdCycleFocus": {
+    "message": "Switch focus: off → line → paragraph"
+  },
+  "menuReader": {
+    "message": "Open in reader view"
+  },
+  "menuFocus": {
+    "message": "Focus"
+  },
+  "menuToggleSite": {
+    "message": "Turn on/off on this site"
   },
   "badgeOff": {
     "message": "off"
@@ -25,6 +40,18 @@
   },
   "localFiles": {
     "message": "Local files"
+  },
+  "readerButton": {
+    "message": "Reader view"
+  },
+  "tabBionic": {
+    "message": "Bionic"
+  },
+  "tabLook": {
+    "message": "Look"
+  },
+  "bionicLabel": {
+    "message": "Bionic reading"
   },
   "fixationLabel": {
     "message": "Bold part of each word"
@@ -51,16 +78,131 @@
     "message": "Rest of the word"
   },
   "fadeHint": {
-    "message": "Make the rest of each word lighter so the bold start stands out more."
+    "message": "Make the rest of each word lighter so the bold start stands out more. In text that is already bold (headings) the start gets heavier and the rest slightly lighter automatically."
   },
-  "fadeOff": {
-    "message": "normal"
+  "saccadeLabel": {
+    "message": "Which words"
+  },
+  "saccadeHint": {
+    "message": "Emphasise every word, or only some of them for a lighter look."
+  },
+  "saccadeEvery": {
+    "message": "every word"
+  },
+  "saccadeNth": {
+    "message": "one in $N$",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "minWordLengthLabel": {
+    "message": "Short words"
+  },
+  "minWordLengthHint": {
+    "message": "Leave short words (prepositions, articles) without emphasis."
+  },
+  "minWordLengthValue": {
+    "message": "$N$+ letters",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "valueAllWords": {
+    "message": "all words"
   },
   "skipCodeLabel": {
     "message": "Leave code alone"
   },
   "skipCodeHint": {
     "message": "Don't change text inside code blocks, code editors and terminals."
+  },
+  "fontLabel": {
+    "message": "Font"
+  },
+  "font_site": {
+    "message": "As on the site"
+  },
+  "font_system": {
+    "message": "System sans-serif"
+  },
+  "font_serif": {
+    "message": "Serif"
+  },
+  "fontHint": {
+    "message": "Atkinson Hyperlegible, Lexend and OpenDyslexic have Latin letters only; Cyrillic is shown in PT Sans."
+  },
+  "lineHeightLabel": {
+    "message": "Line spacing"
+  },
+  "letterSpacingLabel": {
+    "message": "Letter spacing"
+  },
+  "wordSpacingLabel": {
+    "message": "Word spacing"
+  },
+  "tintLabel": {
+    "message": "Page tint"
+  },
+  "tint_none": {
+    "message": "No tint"
+  },
+  "tint_cream": {
+    "message": "Cream"
+  },
+  "tint_peach": {
+    "message": "Peach"
+  },
+  "tint_yellow": {
+    "message": "Yellow"
+  },
+  "tint_green": {
+    "message": "Green"
+  },
+  "tint_blue": {
+    "message": "Blue"
+  },
+  "tint_rose": {
+    "message": "Rose"
+  },
+  "tint_gray": {
+    "message": "Gray"
+  },
+  "tintStrengthLabel": {
+    "message": "Tint strength"
+  },
+  "dimLabel": {
+    "message": "Dim the page"
+  },
+  "valueNormal": {
+    "message": "normal"
+  },
+  "valueSite": {
+    "message": "as on the site"
+  },
+  "valueOff": {
+    "message": "off"
+  },
+  "focusLabel": {
+    "message": "Focus"
+  },
+  "focus_off": {
+    "message": "Off"
+  },
+  "focus_line": {
+    "message": "Line"
+  },
+  "focus_paragraph": {
+    "message": "Paragraph"
+  },
+  "focusDimLabel": {
+    "message": "Darken around"
+  },
+  "previewLabel": {
+    "message": "Preview"
   },
   "previewText": {
     "message": "Bionic reading guides your eyes through the text: the bold start of each word is enough for the brain to recognise it, so reading feels lighter and focus drifts less."
@@ -72,9 +214,9 @@
     "message": "All settings"
   },
   "shortcutHint": {
-    "message": "$SHORTCUT$ — toggle on this site",
+    "message": "$N$ — toggle on this site",
     "placeholders": {
-      "shortcut": {
+      "n": {
         "content": "$1"
       }
     }
@@ -91,26 +233,35 @@
   "noticeReload": {
     "message": "Reload the page to activate ADHD Reader here."
   },
+  "noticeReaderUnavailable": {
+    "message": "Reader view can't be opened on this page."
+  },
   "reloadPage": {
     "message": "Reload"
   },
   "optionsSubtitle": {
-    "message": "Bionic-style reading on every website"
+    "message": "Bionic reading, focus and comfortable text on every website"
   },
   "enabledLabel": {
     "message": "Enabled"
   },
   "enabledHint": {
-    "message": "Main switch for all sites. You can also turn it off for individual sites below or from the toolbar popup."
+    "message": "Main switch for everything the extension does on pages. Reader view keeps working on sites where it's off."
   },
-  "sectionReading": {
-    "message": "Reading"
+  "siteModeLabel": {
+    "message": "Where it works"
   },
-  "sectionSites": {
-    "message": "Sites where it's off"
+  "siteMode_all": {
+    "message": "Everywhere except…"
   },
-  "sitesHint": {
-    "message": "One site per line. A domain also covers its subdomains: example.com turns it off on news.example.com too."
+  "siteMode_only": {
+    "message": "Only on…"
+  },
+  "sitesHintAll": {
+    "message": "Sites where it's off, one per line. A domain also covers its subdomains: example.com turns it off on news.example.com too."
+  },
+  "sitesHintOnly": {
+    "message": "Sites where it's on, one per line. A domain also covers its subdomains."
   },
   "sitesPlaceholder": {
     "message": "example.com\nmail.google.com"
@@ -120,6 +271,90 @@
   },
   "saved": {
     "message": "Saved"
+  },
+  "sectionBionic": {
+    "message": "Bionic reading"
+  },
+  "sectionLook": {
+    "message": "Page look"
+  },
+  "lookHint": {
+    "message": "Changes the font and spacing of text on pages and tints the screen. Bigger spacing can make some site layouts wrap differently."
+  },
+  "sectionFocus": {
+    "message": "Focus"
+  },
+  "focusHint": {
+    "message": "Keeps the line or paragraph under the mouse bright and darkens the rest of the screen."
+  },
+  "sectionReader": {
+    "message": "Reader view"
+  },
+  "readerHint": {
+    "message": "Shows just the article text — no ads, menus or sidebars — with bionic emphasis, your font, a progress bar and the time left. Open it from the popup, the context menu or with the shortcut; Esc closes it."
+  },
+  "readerThemeLabel": {
+    "message": "Theme"
+  },
+  "theme_auto": {
+    "message": "Auto"
+  },
+  "theme_light": {
+    "message": "Light"
+  },
+  "theme_sepia": {
+    "message": "Sepia"
+  },
+  "theme_dark": {
+    "message": "Dark"
+  },
+  "readerFontSizeLabel": {
+    "message": "Text size"
+  },
+  "readerWidthLabel": {
+    "message": "Line length"
+  },
+  "readerWidthValue": {
+    "message": "$N$ chars",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerNotFound": {
+    "message": "Couldn't find the main text on this page."
+  },
+  "readerSmaller": {
+    "message": "Smaller text"
+  },
+  "readerLarger": {
+    "message": "Larger text"
+  },
+  "readerTheme": {
+    "message": "Switch theme"
+  },
+  "readerClose": {
+    "message": "Close (Esc)"
+  },
+  "readerMinutes": {
+    "message": "$N$ min read",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerMinutesLeft": {
+    "message": "≈ $N$ min left",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerDone": {
+    "message": "Finished"
   },
   "shortcutsLabel": {
     "message": "Keyboard shortcuts"
@@ -134,7 +369,7 @@
     "message": "Reset to defaults"
   },
   "resetConfirm": {
-    "message": "Reset all settings, including the list of sites where it's off?"
+    "message": "Reset all settings, including the site lists?"
   },
   "aboutText": {
     "message": "Settings are synced through your Chrome profile."

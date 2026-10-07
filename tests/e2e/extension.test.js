@@ -4,92 +4,11 @@
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const http = require('node:http');
-const os = require('node:os');
-const path = require('node:path');
-const { chromium } = require('playwright');
+const { setupExtension, textOf, boldParts, waitForBold } = require('./helpers');
 
-const ROOT = path.resolve(__dirname, '../..');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css' };
-
-let server;
-let baseUrl;
-let context;
-let worker;
-let extensionId;
-
-test.before(async () => {
-  server = http.createServer((req, res) => {
-    const file = path.join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    if (req.url === '/favicon.ico') {
-      res.writeHead(204).end();
-      return;
-    }
-    if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
-      res.writeHead(404).end();
-      return;
-    }
-    res.writeHead(200, { 'content-type': TYPES[path.extname(file)] || 'application/octet-stream' });
-    fs.createReadStream(file).pipe(res);
-  });
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  baseUrl = `http://127.0.0.1:${server.address().port}`;
-
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'adhdr-e2e-'));
-  context = await chromium.launchPersistentContext(userDataDir, {
-    channel: 'chromium', // new headless mode, which supports extensions
-    args: [`--disable-extensions-except=${ROOT}`, `--load-extension=${ROOT}`],
-  });
-  worker = context.serviceWorkers()[0] || (await context.waitForEvent('serviceworker'));
-  extensionId = new URL(worker.url()).host;
-});
-
-test.after(async () => {
-  await context?.close();
-  server?.close();
-});
-
-test.beforeEach(async () => {
-  await worker.evaluate(() => chrome.storage.sync.clear());
-});
-
-function setSettings(patch) {
-  return worker.evaluate((p) => chrome.storage.sync.set(p), patch);
-}
-
-async function openPage(name) {
-  const page = await context.newPage();
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
-  await page.goto(`${baseUrl}/tests/fixtures/${name}`);
-  return { page, errors };
-}
-
-/** Visible text of an element with whitespace collapsed. */
-function textOf(page, selector) {
-  return page.$eval(selector, (el) => el.innerText.replace(/\s+/g, ' ').trim());
-}
-
-/** Bold fragments inside an element (or a shadow root reachable from window[rootVar]). */
-function boldParts(page, selector) {
-  return page.evaluate((sel) => {
-    const scope = sel.startsWith('window.') ? window[sel.slice(7)] : document.querySelector(sel);
-    return scope ? [...scope.querySelectorAll('adhdrb')].map((b) => b.textContent) : null;
-  }, selector);
-}
-
-async function waitForBold(page, selector, timeout = 5000) {
-  await page.waitForFunction(
-    (sel) => {
-      const scope = sel.startsWith('window.') ? window[sel.slice(7)] : document.querySelector(sel);
-      return scope && scope.querySelector('adhdrb');
-    },
-    selector,
-    { timeout },
-  );
-}
+const env = setupExtension();
+const setSettings = (patch) => env.setSettings(patch);
+const openPage = (name) => env.openPage(name);
 
 test('bolds the start of words on a regular page without changing its text', async () => {
   const { page, errors } = await openPage('basic.html');
@@ -257,14 +176,30 @@ test('processes a large page quickly', async () => {
 
 test('popup and options pages render without errors', async () => {
   for (const pagePath of ['src/popup/popup.html', 'src/options/options.html']) {
-    const page = await context.newPage();
+    const page = await env.context.newPage();
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
-    await page.goto(`chrome-extension://${extensionId}/${pagePath}`);
+    await page.goto(`chrome-extension://${env.extensionId}/${pagePath}`);
     await page.waitForSelector('#preview adhdrb');
     assert.equal(await page.$eval('[data-setting="fixation"]', (i) => i.value), '50');
+
+    if (pagePath.includes('popup')) {
+      await page.click('#tab-look');
+      assert.equal(await page.isVisible('#panel-look'), true);
+      assert.equal(await page.isVisible('#panel-bionic'), false);
+    }
+    // Choosing a font saves it and shows it in the preview.
+    await page.selectOption('select[data-setting="font"]', 'lexend');
+    await page.waitForFunction(() => getComputedStyle(document.getElementById('preview')).fontFamily.includes('ADHDR Lexend'));
+    assert.equal(await env.worker.evaluate(async () => (await chrome.storage.sync.get('font')).font), 'lexend');
+    // Choosing a tint reveals its strength slider.
+    assert.equal(await page.isVisible('[data-hide-if="tint=none"]'), false);
+    await page.click('label[data-tint="blue"]');
+    await page.waitForSelector('[data-hide-if="tint=none"]', { state: 'visible' });
+
     assert.deepEqual(errors, [], pagePath);
+    await env.worker.evaluate(() => chrome.storage.sync.clear());
     await page.close();
   }
 });
@@ -274,8 +209,8 @@ test('re-injecting the content script hands over cleanly (extension update in op
   await waitForBold(page, '#plain');
   const before = await page.$eval('#plain', (p) => p.innerHTML);
 
-  const tabId = await worker.evaluate(async (url) => (await chrome.tabs.query({ url }))[0].id, page.url());
-  await worker.evaluate(
+  const tabId = await env.tabIdOf(page);
+  await env.worker.evaluate(
     (id) => chrome.scripting.executeScript({ target: { tabId: id, allFrames: true }, files: chrome.runtime.getManifest().content_scripts[0].js }),
     tabId,
   );

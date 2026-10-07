@@ -3,7 +3,7 @@
     "message": "ADHD Reader"
   },
   "extDescription": {
-    "message": "Выделяет начала слов жирным (бионическое чтение) на любом сайте — включая динамические страницы, Shadow DOM и фреймы."
+    "message": "Бионическое чтение на любом сайте, режим чтения, линейка фокуса, удобные шрифты и тонировка страницы."
   },
   "actionTitle": {
     "message": "ADHD Reader"
@@ -13,6 +13,21 @@
   },
   "cmdToggleGlobal": {
     "message": "Включить/выключить везде"
+  },
+  "cmdToggleReader": {
+    "message": "Открыть/закрыть режим чтения"
+  },
+  "cmdCycleFocus": {
+    "message": "Переключить фокус: выкл → строка → абзац"
+  },
+  "menuReader": {
+    "message": "Открыть в режиме чтения"
+  },
+  "menuFocus": {
+    "message": "Фокус"
+  },
+  "menuToggleSite": {
+    "message": "Включить/выключить на этом сайте"
   },
   "badgeOff": {
     "message": "выкл"
@@ -25,6 +40,18 @@
   },
   "localFiles": {
     "message": "Локальные файлы"
+  },
+  "readerButton": {
+    "message": "Режим чтения"
+  },
+  "tabBionic": {
+    "message": "Бионика"
+  },
+  "tabLook": {
+    "message": "Вид"
+  },
+  "bionicLabel": {
+    "message": "Бионическое чтение"
   },
   "fixationLabel": {
     "message": "Жирная часть слова"
@@ -51,16 +78,131 @@
     "message": "Остаток слова"
   },
   "fadeHint": {
-    "message": "Сделать остаток слова светлее, чтобы жирное начало сильнее выделялось."
+    "message": "Сделать остаток слова светлее, чтобы жирное начало сильнее выделялось. В уже жирном тексте (заголовки) начало автоматически становится ещё жирнее, а остаток — немного светлее."
   },
-  "fadeOff": {
-    "message": "обычный"
+  "saccadeLabel": {
+    "message": "Какие слова"
+  },
+  "saccadeHint": {
+    "message": "Выделять каждое слово или только часть слов, чтобы текст выглядел легче."
+  },
+  "saccadeEvery": {
+    "message": "каждое слово"
+  },
+  "saccadeNth": {
+    "message": "каждое $N$-е",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "minWordLengthLabel": {
+    "message": "Короткие слова"
+  },
+  "minWordLengthHint": {
+    "message": "Не выделять короткие слова (предлоги, союзы, артикли)."
+  },
+  "minWordLengthValue": {
+    "message": "от $N$ букв",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "valueAllWords": {
+    "message": "все слова"
   },
   "skipCodeLabel": {
     "message": "Не трогать код"
   },
   "skipCodeHint": {
     "message": "Не менять текст в блоках кода, редакторах кода и терминалах."
+  },
+  "fontLabel": {
+    "message": "Шрифт"
+  },
+  "font_site": {
+    "message": "Как на сайте"
+  },
+  "font_system": {
+    "message": "Системный без засечек"
+  },
+  "font_serif": {
+    "message": "С засечками"
+  },
+  "fontHint": {
+    "message": "В Atkinson Hyperlegible, Lexend и OpenDyslexic только латиница — кириллица показывается шрифтом PT Sans."
+  },
+  "lineHeightLabel": {
+    "message": "Межстрочный интервал"
+  },
+  "letterSpacingLabel": {
+    "message": "Расстояние между буквами"
+  },
+  "wordSpacingLabel": {
+    "message": "Расстояние между словами"
+  },
+  "tintLabel": {
+    "message": "Тонировка страницы"
+  },
+  "tint_none": {
+    "message": "Без тонировки"
+  },
+  "tint_cream": {
+    "message": "Кремовый"
+  },
+  "tint_peach": {
+    "message": "Персиковый"
+  },
+  "tint_yellow": {
+    "message": "Жёлтый"
+  },
+  "tint_green": {
+    "message": "Зелёный"
+  },
+  "tint_blue": {
+    "message": "Голубой"
+  },
+  "tint_rose": {
+    "message": "Розовый"
+  },
+  "tint_gray": {
+    "message": "Серый"
+  },
+  "tintStrengthLabel": {
+    "message": "Сила тонировки"
+  },
+  "dimLabel": {
+    "message": "Приглушить страницу"
+  },
+  "valueNormal": {
+    "message": "обычный"
+  },
+  "valueSite": {
+    "message": "как на сайте"
+  },
+  "valueOff": {
+    "message": "нет"
+  },
+  "focusLabel": {
+    "message": "Фокус"
+  },
+  "focus_off": {
+    "message": "Выкл"
+  },
+  "focus_line": {
+    "message": "Строка"
+  },
+  "focus_paragraph": {
+    "message": "Абзац"
+  },
+  "focusDimLabel": {
+    "message": "Затемнение вокруг"
+  },
+  "previewLabel": {
+    "message": "Предпросмотр"
   },
   "previewText": {
     "message": "Бионическое чтение ведёт взгляд по тексту: мозгу достаточно жирного начала слова, чтобы его узнать, поэтому читать легче, а внимание реже уплывает."
@@ -72,9 +214,9 @@
     "message": "Все настройки"
   },
   "shortcutHint": {
-    "message": "$SHORTCUT$ — вкл/выкл на этом сайте",
+    "message": "$N$ — вкл/выкл на этом сайте",
     "placeholders": {
-      "shortcut": {
+      "n": {
         "content": "$1"
       }
     }
@@ -91,26 +233,35 @@
   "noticeReload": {
     "message": "Перезагрузите страницу, чтобы ADHD Reader заработал здесь."
   },
+  "noticeReaderUnavailable": {
+    "message": "На этой странице режим чтения открыть нельзя."
+  },
   "reloadPage": {
     "message": "Перезагрузить"
   },
   "optionsSubtitle": {
-    "message": "Бионическое чтение на любом сайте"
+    "message": "Бионическое чтение, фокус и удобный текст на любом сайте"
   },
   "enabledLabel": {
     "message": "Включено"
   },
   "enabledHint": {
-    "message": "Главный переключатель для всех сайтов. Отдельные сайты можно выключить ниже или во всплывающем окне на панели."
+    "message": "Главный переключатель для всего, что расширение делает на страницах. Режим чтения работает и там, где расширение выключено."
   },
-  "sectionReading": {
-    "message": "Чтение"
+  "siteModeLabel": {
+    "message": "Где работает"
   },
-  "sectionSites": {
-    "message": "Сайты, где выключено"
+  "siteMode_all": {
+    "message": "Везде, кроме…"
   },
-  "sitesHint": {
-    "message": "По одному сайту на строку. Домен включает и поддомены: example.com выключит и news.example.com."
+  "siteMode_only": {
+    "message": "Только на…"
+  },
+  "sitesHintAll": {
+    "message": "Сайты, где расширение выключено, по одному на строку. Домен включает и поддомены: example.com выключит и news.example.com."
+  },
+  "sitesHintOnly": {
+    "message": "Сайты, где расширение включено, по одному на строку. Домен включает и поддомены."
   },
   "sitesPlaceholder": {
     "message": "example.com\nmail.google.com"
@@ -120,6 +271,90 @@
   },
   "saved": {
     "message": "Сохранено"
+  },
+  "sectionBionic": {
+    "message": "Бионическое чтение"
+  },
+  "sectionLook": {
+    "message": "Вид страницы"
+  },
+  "lookHint": {
+    "message": "Меняет шрифт и интервалы текста на страницах и тонирует экран. Большие интервалы на некоторых сайтах могут сдвинуть вёрстку."
+  },
+  "sectionFocus": {
+    "message": "Фокус"
+  },
+  "focusHint": {
+    "message": "Оставляет яркой строку или абзац под курсором и затемняет остальной экран."
+  },
+  "sectionReader": {
+    "message": "Режим чтения"
+  },
+  "readerHint": {
+    "message": "Показывает только текст статьи — без рекламы, меню и боковых колонок — с бионическим выделением, вашим шрифтом, полосой прогресса и оставшимся временем. Открывается из окна расширения, контекстного меню или горячей клавишей; Esc закрывает."
+  },
+  "readerThemeLabel": {
+    "message": "Тема"
+  },
+  "theme_auto": {
+    "message": "Авто"
+  },
+  "theme_light": {
+    "message": "Светлая"
+  },
+  "theme_sepia": {
+    "message": "Сепия"
+  },
+  "theme_dark": {
+    "message": "Тёмная"
+  },
+  "readerFontSizeLabel": {
+    "message": "Размер текста"
+  },
+  "readerWidthLabel": {
+    "message": "Длина строки"
+  },
+  "readerWidthValue": {
+    "message": "$N$ симв.",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerNotFound": {
+    "message": "Не удалось найти основной текст на этой странице."
+  },
+  "readerSmaller": {
+    "message": "Уменьшить текст"
+  },
+  "readerLarger": {
+    "message": "Увеличить текст"
+  },
+  "readerTheme": {
+    "message": "Сменить тему"
+  },
+  "readerClose": {
+    "message": "Закрыть (Esc)"
+  },
+  "readerMinutes": {
+    "message": "$N$ мин чтения",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerMinutesLeft": {
+    "message": "осталось ≈ $N$ мин",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "readerDone": {
+    "message": "Дочитано"
   },
   "shortcutsLabel": {
     "message": "Горячие клавиши"
@@ -134,7 +369,7 @@
     "message": "Сбросить настройки"
   },
   "resetConfirm": {
-    "message": "Сбросить все настройки, включая список сайтов, где расширение выключено?"
+    "message": "Сбросить все настройки, включая списки сайтов?"
   },
   "aboutText": {
     "message": "Настройки синхронизируются через ваш профиль Chrome."

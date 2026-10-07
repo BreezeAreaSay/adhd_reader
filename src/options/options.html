@@ -16,79 +16,204 @@
         </div>
       </header>
 
-      <section class="card row">
-        <div>
-          <h2 data-i18n="enabledLabel">Enabled</h2>
-          <p class="hint" data-i18n="enabledHint"></p>
-        </div>
-        <label class="switch">
-          <input type="checkbox" data-setting="enabled" data-i18n-aria-label="enabledLabel" />
-          <span></span>
-        </label>
-      </section>
-
-      <div class="columns">
-        <section class="card">
-          <h2 data-i18n="sectionReading">Reading</h2>
-
-          <label class="control">
-            <span data-i18n="fixationLabel">Bold part of each word</span>
-            <output data-output="fixation"></output>
-            <input type="range" min="10" max="90" step="5" data-setting="fixation" />
-            <p class="hint" data-i18n="fixationHint"></p>
-          </label>
-
-          <div class="control">
-            <span data-i18n="weightLabel">Boldness</span>
-            <div class="segmented" role="radiogroup" data-i18n-aria-label="weightLabel">
-              <label data-i18n-title="weight500"><input type="radio" name="weight" value="500" data-setting="weight" /><span style="font-weight: 500">Aa</span></label>
-              <label data-i18n-title="weight600"><input type="radio" name="weight" value="600" data-setting="weight" /><span style="font-weight: 600">Aa</span></label>
-              <label data-i18n-title="weight700"><input type="radio" name="weight" value="700" data-setting="weight" /><span style="font-weight: 700">Aa</span></label>
-              <label data-i18n-title="weight800"><input type="radio" name="weight" value="800" data-setting="weight" /><span style="font-weight: 800">Aa</span></label>
+      <div class="layout">
+        <div class="sections">
+          <section class="card">
+            <div class="row">
+              <div>
+                <h2 data-i18n="enabledLabel">Enabled</h2>
+                <p class="hint" data-i18n="enabledHint"></p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" data-setting="enabled" data-i18n-aria-label="enabledLabel" />
+                <span></span>
+              </label>
             </div>
-          </div>
+            <div class="control">
+              <span data-i18n="siteModeLabel">Where it works</span>
+              <div class="segmented two" role="radiogroup" data-i18n-aria-label="siteModeLabel">
+                <label><input type="radio" name="siteMode" value="all" data-setting="siteMode" /><span data-i18n="siteMode_all">Everywhere except…</span></label>
+                <label><input type="radio" name="siteMode" value="only" data-setting="siteMode" /><span data-i18n="siteMode_only">Only on…</span></label>
+              </div>
+            </div>
+            <p class="hint" data-show-if="siteMode=all" data-i18n="sitesHintAll"></p>
+            <p class="hint" data-show-if="siteMode=only" data-i18n="sitesHintOnly"></p>
+            <textarea id="sites" rows="5" spellcheck="false" data-i18n-placeholder="sitesPlaceholder"></textarea>
+            <div class="actions">
+              <button type="button" class="button primary" id="save-sites" data-i18n="saveSites">Save</button>
+              <span class="muted" id="sites-status" role="status"></span>
+            </div>
+          </section>
 
-          <label class="control">
-            <span data-i18n="fadeLabel">Rest of the word</span>
-            <output data-output="fade"></output>
-            <input type="range" min="20" max="100" step="5" data-setting="fade" />
-            <p class="hint" data-i18n="fadeHint"></p>
-          </label>
+          <section class="card">
+            <div class="row">
+              <h2 data-i18n="sectionBionic">Bionic reading</h2>
+              <label class="switch">
+                <input type="checkbox" data-setting="bionic" data-i18n-aria-label="bionicLabel" />
+                <span></span>
+              </label>
+            </div>
+            <label class="control">
+              <span data-i18n="fixationLabel">Bold part of each word</span>
+              <output data-output="fixation"></output>
+              <input type="range" min="10" max="90" step="5" data-setting="fixation" />
+              <p class="hint" data-i18n="fixationHint"></p>
+            </label>
+            <div class="control">
+              <span data-i18n="weightLabel">Boldness</span>
+              <div class="segmented" role="radiogroup" data-i18n-aria-label="weightLabel">
+                <label data-i18n-title="weight500"><input type="radio" name="weight" value="500" data-setting="weight" /><span style="font-weight: 500">Aa</span></label>
+                <label data-i18n-title="weight600"><input type="radio" name="weight" value="600" data-setting="weight" /><span style="font-weight: 600">Aa</span></label>
+                <label data-i18n-title="weight700"><input type="radio" name="weight" value="700" data-setting="weight" /><span style="font-weight: 700">Aa</span></label>
+                <label data-i18n-title="weight800"><input type="radio" name="weight" value="800" data-setting="weight" /><span style="font-weight: 800">Aa</span></label>
+              </div>
+            </div>
+            <label class="control">
+              <span data-i18n="fadeLabel">Rest of the word</span>
+              <output data-output="fade"></output>
+              <input type="range" min="20" max="100" step="5" data-setting="fade" />
+              <p class="hint" data-i18n="fadeHint"></p>
+            </label>
+            <label class="control">
+              <span data-i18n="saccadeLabel">Which words</span>
+              <output data-output="saccade"></output>
+              <input type="range" min="1" max="4" step="1" data-setting="saccade" />
+              <p class="hint" data-i18n="saccadeHint"></p>
+            </label>
+            <label class="control">
+              <span data-i18n="minWordLengthLabel">Short words</span>
+              <output data-output="minWordLength"></output>
+              <input type="range" min="1" max="5" step="1" data-setting="minWordLength" />
+              <p class="hint" data-i18n="minWordLengthHint"></p>
+            </label>
+            <label class="control check">
+              <span data-i18n="skipCodeLabel">Leave code alone</span>
+              <input type="checkbox" data-setting="skipCode" />
+              <p class="hint" data-i18n="skipCodeHint"></p>
+            </label>
+          </section>
 
-          <label class="control check">
-            <span data-i18n="skipCodeLabel">Skip code</span>
-            <input type="checkbox" data-setting="skipCode" />
-            <p class="hint" data-i18n="skipCodeHint"></p>
-          </label>
-        </section>
+          <section class="card">
+            <h2 data-i18n="sectionLook">Page look</h2>
+            <p class="hint lead" data-i18n="lookHint"></p>
+            <label class="control">
+              <span data-i18n="fontLabel">Font</span>
+              <select data-setting="font">
+                <option value="site" data-i18n="font_site">As on the site</option>
+                <option value="atkinson">Atkinson Hyperlegible</option>
+                <option value="lexend">Lexend</option>
+                <option value="opendyslexic">OpenDyslexic</option>
+                <option value="ptsans">PT Sans</option>
+                <option value="system" data-i18n="font_system">System</option>
+                <option value="serif" data-i18n="font_serif">Serif</option>
+              </select>
+              <p class="hint" data-i18n="fontHint"></p>
+            </label>
+            <label class="control">
+              <span data-i18n="lineHeightLabel">Line spacing</span>
+              <output data-output="lineHeight"></output>
+              <input type="range" min="100" max="240" step="10" data-setting="lineHeight" />
+            </label>
+            <label class="control">
+              <span data-i18n="letterSpacingLabel">Letter spacing</span>
+              <output data-output="letterSpacing"></output>
+              <input type="range" min="0" max="20" step="1" data-setting="letterSpacing" />
+            </label>
+            <label class="control">
+              <span data-i18n="wordSpacingLabel">Word spacing</span>
+              <output data-output="wordSpacing"></output>
+              <input type="range" min="0" max="50" step="2" data-setting="wordSpacing" />
+            </label>
+            <div class="control">
+              <span data-i18n="tintLabel">Page tint</span>
+              <div class="swatches" role="radiogroup" data-i18n-aria-label="tintLabel">
+                <label class="swatch none" data-i18n-title="tint_none"><input type="radio" name="tint" value="none" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="cream" data-i18n-title="tint_cream"><input type="radio" name="tint" value="cream" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="peach" data-i18n-title="tint_peach"><input type="radio" name="tint" value="peach" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="yellow" data-i18n-title="tint_yellow"><input type="radio" name="tint" value="yellow" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="green" data-i18n-title="tint_green"><input type="radio" name="tint" value="green" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="blue" data-i18n-title="tint_blue"><input type="radio" name="tint" value="blue" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="rose" data-i18n-title="tint_rose"><input type="radio" name="tint" value="rose" data-setting="tint" /><span></span></label>
+                <label class="swatch" data-tint="gray" data-i18n-title="tint_gray"><input type="radio" name="tint" value="gray" data-setting="tint" /><span></span></label>
+              </div>
+            </div>
+            <label class="control" data-hide-if="tint=none">
+              <span data-i18n="tintStrengthLabel">Tint strength</span>
+              <output data-output="tintStrength"></output>
+              <input type="range" min="10" max="80" step="5" data-setting="tintStrength" />
+            </label>
+            <label class="control">
+              <span data-i18n="dimLabel">Dim the page</span>
+              <output data-output="dim"></output>
+              <input type="range" min="0" max="70" step="5" data-setting="dim" />
+            </label>
+          </section>
 
-        <section class="card preview" id="preview" aria-live="polite"></section>
-      </div>
+          <section class="card">
+            <h2 data-i18n="sectionFocus">Focus</h2>
+            <p class="hint lead" data-i18n="focusHint"></p>
+            <div class="control">
+              <span data-i18n="focusLabel">Focus</span>
+              <div class="segmented three" role="radiogroup" data-i18n-aria-label="focusLabel">
+                <label><input type="radio" name="focus" value="off" data-setting="focus" /><span data-i18n="focus_off">Off</span></label>
+                <label><input type="radio" name="focus" value="line" data-setting="focus" /><span data-i18n="focus_line">Line</span></label>
+                <label><input type="radio" name="focus" value="paragraph" data-setting="focus" /><span data-i18n="focus_paragraph">Paragraph</span></label>
+              </div>
+            </div>
+            <label class="control">
+              <span data-i18n="focusDimLabel">Darken around</span>
+              <output data-output="focusDim"></output>
+              <input type="range" min="20" max="85" step="5" data-setting="focusDim" />
+            </label>
+          </section>
 
-      <section class="card">
-        <h2 data-i18n="sectionSites">Sites where it's off</h2>
-        <p class="hint" data-i18n="sitesHint"></p>
-        <textarea id="sites" rows="6" spellcheck="false" data-i18n-placeholder="sitesPlaceholder"></textarea>
-        <div class="actions">
-          <button type="button" class="button primary" id="save-sites" data-i18n="saveSites">Save</button>
-          <span class="muted" id="sites-status" role="status"></span>
+          <section class="card">
+            <h2 data-i18n="sectionReader">Reader view</h2>
+            <p class="hint lead" data-i18n="readerHint"></p>
+            <div class="control">
+              <span data-i18n="readerThemeLabel">Theme</span>
+              <div class="segmented" role="radiogroup" data-i18n-aria-label="readerThemeLabel">
+                <label><input type="radio" name="readerTheme" value="auto" data-setting="readerTheme" /><span data-i18n="theme_auto">Auto</span></label>
+                <label><input type="radio" name="readerTheme" value="light" data-setting="readerTheme" /><span data-i18n="theme_light">Light</span></label>
+                <label><input type="radio" name="readerTheme" value="sepia" data-setting="readerTheme" /><span data-i18n="theme_sepia">Sepia</span></label>
+                <label><input type="radio" name="readerTheme" value="dark" data-setting="readerTheme" /><span data-i18n="theme_dark">Dark</span></label>
+              </div>
+            </div>
+            <label class="control">
+              <span data-i18n="readerFontSizeLabel">Text size</span>
+              <output data-output="readerFontSize"></output>
+              <input type="range" min="14" max="34" step="1" data-setting="readerFontSize" />
+            </label>
+            <label class="control">
+              <span data-i18n="readerWidthLabel">Line length</span>
+              <output data-output="readerWidth"></output>
+              <input type="range" min="45" max="100" step="5" data-setting="readerWidth" />
+            </label>
+          </section>
+
+          <section class="card">
+            <h2 data-i18n="shortcutsLabel">Keyboard shortcuts</h2>
+            <ul class="shortcuts" id="shortcuts"></ul>
+            <button type="button" class="link-button" id="open-shortcuts" data-i18n="openShortcuts">Change shortcuts</button>
+          </section>
+
+          <footer class="foot">
+            <button type="button" class="button" id="reset" data-i18n="resetDefaults">Reset to defaults</button>
+            <span class="muted" data-i18n="aboutText"></span>
+          </footer>
         </div>
-      </section>
 
-      <section class="card">
-        <h2 data-i18n="shortcutsLabel">Keyboard shortcuts</h2>
-        <ul class="shortcuts" id="shortcuts"></ul>
-        <button type="button" class="link-button" id="open-shortcuts" data-i18n="openShortcuts">Change shortcuts</button>
-      </section>
-
-      <footer class="foot">
-        <button type="button" class="button" id="reset" data-i18n="resetDefaults">Reset to defaults</button>
-        <span class="muted" data-i18n="aboutText"></span>
-      </footer>
+        <aside class="aside">
+          <div class="muted aside-label" data-i18n="previewLabel">Preview</div>
+          <section class="card preview" id="preview" aria-live="polite"></section>
+        </aside>
+      </div>
     </div>
 
     <script src="../shared/settings.js"></script>
     <script src="../content/bionic.js"></script>
+    <script src="../content/font-faces.js"></script>
+    <script src="../content/typography.js"></script>
     <script src="../ui/ui.js"></script>
     <script src="options.js"></script>
   </body>

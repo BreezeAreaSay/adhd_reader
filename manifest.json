@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "short_name": "ADHD Reader",
   "description": "__MSG_extDescription__",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "default_locale": "en",
   "minimum_chrome_version": "111",
   "icons": {
@@ -27,12 +27,28 @@
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
-  "permissions": ["storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "storage",
+    "scripting",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/shared/settings.js", "src/content/bionic.js", "src/content/content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/shared/settings.js",
+        "src/content/bionic.js",
+        "src/content/engine.js",
+        "src/content/font-faces.js",
+        "src/content/typography.js",
+        "src/content/overlay.js",
+        "src/content/main.js"
+      ],
       "run_at": "document_idle",
       "all_frames": true,
       "match_origin_as_fallback": true
@@ -40,11 +56,35 @@
   ],
   "commands": {
     "toggle-site": {
-      "suggested_key": { "default": "Alt+Shift+B" },
+      "suggested_key": {
+        "default": "Alt+Shift+E"
+      },
       "description": "__MSG_cmdToggleSite__"
+    },
+    "toggle-reader": {
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
+      "description": "__MSG_cmdToggleReader__"
+    },
+    "cycle-focus": {
+      "suggested_key": {
+        "default": "Alt+Shift+F"
+      },
+      "description": "__MSG_cmdCycleFocus__"
     },
     "toggle-global": {
       "description": "__MSG_cmdToggleGlobal__"
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "fonts/*.woff2"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }

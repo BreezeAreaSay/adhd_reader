@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Focus is a skill — Daily Example</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 Arial, sans-serif; }
+      header, footer { background: #222; color: #fff; padding: 12px 24px; }
+      .layout { display: grid; grid-template-columns: 1fr 260px; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 24px; }
+      aside { border-left: 1px solid #ddd; padding-left: 16px; }
+      .ad { background: #fdd; padding: 16px; margin: 12px 0; }
+    </style>
+  </head>
+  <body>
+    <header id="site-header">
+      <nav><a href="/">Home</a> · <a href="/world">World</a> · <a href="/tech">Technology</a> · <a href="/login">Sign in</a></nav>
+    </header>
+    <div class="layout">
+      <main>
+        <article>
+          <h1>Focus is a skill you can practise</h1>
+          <p class="byline">By Alex Example</p>
+          <p id="first">Attention is not a fixed amount that some people have and others lack. It behaves more like a muscle: it gets tired, it recovers, and it responds to the way we organise our work and our surroundings during the day.</p>
+          <p>Long walls of text are hard for many readers, especially for people with ADHD. Breaking the page into clear parts, removing distractions and giving the eyes an anchor on every line all make it easier to keep going.</p>
+          <figure><img src="/tests/fixtures/pixel.png" alt="A calm desk" onerror="window.__imgError = true" /><figcaption>A calm desk helps more than a fast computer.</figcaption></figure>
+          <p>Short sessions with planned breaks work better than heroic marathons. A timer, a clear goal for the session and a single open tab are simple tools that cost nothing and help almost everyone.</p>
+          <h2>Make the page work for you</h2>
+          <p>Reader views strip menus, banners and comments so only the article remains. Larger line spacing and a comfortable font reduce visual crowding, and a gentle tint can make bright screens easier on the eyes.</p>
+          <p>Some readers like to <a href="javascript:alert(1)">click here</a> or follow a <a href="/guide" onclick="window.__clicked = true">practical guide</a> to set up their tools once and forget about them.</p>
+          <p>Finally, be kind to yourself. Losing focus is normal; the skill is noticing it and coming back to the text, again and again, without judging yourself for drifting away.</p>
+          <script>window.__articleScriptRan = true;</script>
+          <iframe src="about:blank" title="video"></iframe>
+        </article>
+        <section id="comments">
+          <h3>Comments</h3>
+          <p>First! Great article, totally agree with everything here.</p>
+        </section>
+      </main>
+      <aside id="sidebar">
+        <div class="ad">Buy the best headphones today — 50% off!</div>
+        <h3>Most read</h3>
+        <ul><li><a href="/1">Ten tips for productivity</a></li><li><a href="/2">Why sleep matters</a></li></ul>
+      </aside>
+    </div>
+    <footer>© Daily Example. All rights reserved.</footer>
+  </body>
+</html>

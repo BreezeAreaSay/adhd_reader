@@ -3,9 +3,7 @@ body {
 }
 
 .page {
-  display: grid;
-  gap: 16px;
-  max-width: 880px;
+  max-width: 980px;
   margin: 0 auto;
 }
 
@@ -13,7 +11,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .head h1 {
@@ -22,6 +20,39 @@ body {
 
 .head p {
   margin: 2px 0 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  align-items: start;
+  gap: 20px;
+}
+
+.sections {
+  display: grid;
+  gap: 16px;
+}
+
+.aside {
+  position: sticky;
+  top: 20px;
+}
+
+.aside-label {
+  margin: 0 0 6px 4px;
+  font-size: 12.5px;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .aside {
+    position: static;
+    order: -1;
+  }
 }
 
 h2 {
@@ -34,37 +65,33 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  margin-bottom: 14px;
 }
 
 .row h2 {
   margin-bottom: 2px;
 }
 
-.columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
+.hint.lead {
+  margin: -6px 0 14px;
 }
 
-@media (max-width: 720px) {
-  .columns {
-    grid-template-columns: 1fr;
-  }
+.segmented.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.segmented.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.segmented.two span,
+.segmented.three span {
+  font-size: 13.5px;
 }
 
 .preview {
-  align-self: start;
   font-size: 17px;
   line-height: 1.7;
-}
-
-.control.check input {
-  grid-column: 2;
-  grid-row: 1;
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--accent);
 }
 
 textarea {

@@ -3,13 +3,27 @@ const assert = require('node:assert/strict');
 const S = require('../../src/shared/settings.js');
 
 test('normalizeSettings fills defaults and clamps values', () => {
-  assert.deepEqual(S.normalizeSettings(undefined), { ...S.DEFAULTS, disabledSites: [] });
-  const s = S.normalizeSettings({ fixation: 500, weight: 650, fade: 'x', enabled: 'yes', disabledSites: ['WWW.Example.com', 'example.com', '???'] });
+  assert.deepEqual(S.normalizeSettings(undefined), { ...S.DEFAULTS, disabledSites: [], enabledSites: [] });
+  const s = S.normalizeSettings({
+    fixation: 500, weight: 650, fade: 'x', enabled: 'yes', saccade: 0, lineHeight: 999,
+    disabledSites: ['WWW.Example.com', 'example.com', '???'],
+  });
   assert.equal(s.fixation, 90);
   assert.equal(s.weight, 700);
   assert.equal(s.fade, 100);
   assert.equal(s.enabled, true);
+  assert.equal(s.saccade, 1);
+  assert.equal(s.lineHeight, 240);
   assert.deepEqual(s.disabledSites, ['example.com']);
+});
+
+test('normalizeSettings only accepts known choices', () => {
+  const s = S.normalizeSettings({ font: 'comic-sans', tint: 'blue', focus: 'paragraph', siteMode: 'nowhere', readerTheme: 'sepia' });
+  assert.equal(s.font, 'site');
+  assert.equal(s.tint, 'blue');
+  assert.equal(s.focus, 'paragraph');
+  assert.equal(s.siteMode, 'all');
+  assert.equal(s.readerTheme, 'sepia');
 });
 
 test('normalizeSite accepts URLs, wildcards, ports and IDN', () => {
@@ -31,17 +45,28 @@ test('siteKeyFromUrl only accepts web pages and local files', () => {
   assert.equal(S.siteKeyFromUrl(undefined), null);
 });
 
-test('a disabled domain covers its subdomains', () => {
+test('"everywhere except" mode: a listed domain covers its subdomains', () => {
   const settings = S.normalizeSettings({ disabledSites: ['example.com'] });
-  assert.equal(S.isSiteDisabled(settings, 'example.com'), true);
-  assert.equal(S.isSiteDisabled(settings, 'news.example.com'), true);
-  assert.equal(S.isSiteDisabled(settings, 'notexample.com'), false);
-  assert.equal(S.isSiteDisabled(settings, null), false);
+  assert.equal(S.isSiteActive(settings, 'example.com'), false);
+  assert.equal(S.isSiteActive(settings, 'news.example.com'), false);
+  assert.equal(S.isSiteActive(settings, 'notexample.com'), true);
+  assert.equal(S.isSiteActive(settings, null), true);
 });
 
-test('setSiteDisabled adds and removes sites without duplicates', () => {
-  assert.deepEqual(S.setSiteDisabled([], 'a.com', true), ['a.com']);
-  assert.deepEqual(S.setSiteDisabled(['a.com'], 'a.com', true), ['a.com']);
-  assert.deepEqual(S.setSiteDisabled(['a.com'], 'x.a.com', true), ['a.com']);
-  assert.deepEqual(S.setSiteDisabled(['a.com', 'b.com'], 'x.a.com', false), ['b.com']);
+test('"only on" mode: active only on listed sites', () => {
+  const settings = S.normalizeSettings({ siteMode: 'only', enabledSites: ['wikipedia.org'], disabledSites: ['ru.wikipedia.org'] });
+  assert.equal(S.isSiteActive(settings, 'ru.wikipedia.org'), true);
+  assert.equal(S.isSiteActive(settings, 'example.com'), false);
+  assert.equal(S.isSiteActive(settings, null), false);
+});
+
+test('sitePatch edits the list of the current mode', () => {
+  const all = S.normalizeSettings({ disabledSites: ['a.com', 'b.com'] });
+  assert.deepEqual(S.sitePatch(all, 'x.a.com', true), { disabledSites: ['b.com'] });
+  assert.deepEqual(S.sitePatch(all, 'c.com', false), { disabledSites: ['a.com', 'b.com', 'c.com'] });
+  assert.deepEqual(S.sitePatch(all, 'x.a.com', false), { disabledSites: ['a.com', 'b.com'] });
+
+  const only = S.normalizeSettings({ siteMode: 'only', enabledSites: ['a.com'] });
+  assert.deepEqual(S.sitePatch(only, 'c.com', true), { enabledSites: ['a.com', 'c.com'] });
+  assert.deepEqual(S.sitePatch(only, 'a.com', false), { enabledSites: [] });
 });

@@ -19,7 +19,7 @@
     <main>
       <section class="card site">
         <div class="site-text">
-          <div class="muted" data-i18n="thisSite">This site</div>
+          <div class="muted" data-i18n="thisSite">On this site</div>
           <div class="site-host" id="site-host">—</div>
         </div>
         <label class="switch">
@@ -33,15 +33,34 @@
         <button type="button" class="link-button" id="reload" hidden data-i18n="reloadPage">Reload</button>
       </p>
 
+      <section class="actions">
+        <button type="button" class="button action" id="open-reader">
+          <span aria-hidden="true">📖</span> <span data-i18n="readerButton">Reader view</span>
+        </button>
+        <div class="segmented focus" role="radiogroup" data-i18n-aria-label="focusLabel" data-i18n-title="focusLabel">
+          <label><input type="radio" name="focus" value="off" data-setting="focus" /><span data-i18n="focus_off">Off</span></label>
+          <label><input type="radio" name="focus" value="line" data-setting="focus" /><span data-i18n="focus_line">Line</span></label>
+          <label><input type="radio" name="focus" value="paragraph" data-setting="focus" /><span data-i18n="focus_paragraph">Paragraph</span></label>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-bionic" aria-controls="panel-bionic" data-i18n="tabBionic">Bionic</button>
+        <button type="button" role="tab" id="tab-look" aria-controls="panel-look" data-i18n="tabLook">Look</button>
+      </div>
+
       <section class="card preview" id="preview" aria-live="polite"></section>
 
-      <section class="card">
+      <section class="card panel" id="panel-bionic" role="tabpanel" aria-labelledby="tab-bionic">
+        <label class="control check">
+          <span data-i18n="bionicLabel">Bionic reading</span>
+          <span class="switch"><input type="checkbox" data-setting="bionic" /><span></span></span>
+        </label>
         <label class="control">
           <span data-i18n="fixationLabel">Bold part of each word</span>
           <output data-output="fixation"></output>
           <input type="range" min="10" max="90" step="5" data-setting="fixation" />
         </label>
-
         <div class="control">
           <span data-i18n="weightLabel">Boldness</span>
           <div class="segmented" role="radiogroup" data-i18n-aria-label="weightLabel">
@@ -51,11 +70,48 @@
             <label data-i18n-title="weight800"><input type="radio" name="weight" value="800" data-setting="weight" /><span style="font-weight: 800">Aa</span></label>
           </div>
         </div>
-
         <label class="control">
           <span data-i18n="fadeLabel">Rest of the word</span>
           <output data-output="fade"></output>
           <input type="range" min="20" max="100" step="5" data-setting="fade" />
+        </label>
+      </section>
+
+      <section class="card panel" id="panel-look" role="tabpanel" aria-labelledby="tab-look" hidden>
+        <label class="control">
+          <span data-i18n="fontLabel">Font</span>
+          <select data-setting="font">
+            <option value="site" data-i18n="font_site">As on the site</option>
+            <option value="atkinson">Atkinson Hyperlegible</option>
+            <option value="lexend">Lexend</option>
+            <option value="opendyslexic">OpenDyslexic</option>
+            <option value="ptsans">PT Sans</option>
+            <option value="system" data-i18n="font_system">System</option>
+            <option value="serif" data-i18n="font_serif">Serif</option>
+          </select>
+        </label>
+        <label class="control">
+          <span data-i18n="lineHeightLabel">Line spacing</span>
+          <output data-output="lineHeight"></output>
+          <input type="range" min="100" max="240" step="10" data-setting="lineHeight" />
+        </label>
+        <div class="control">
+          <span data-i18n="tintLabel">Page tint</span>
+          <div class="swatches" role="radiogroup" data-i18n-aria-label="tintLabel">
+            <label class="swatch none" data-i18n-title="tint_none"><input type="radio" name="tint" value="none" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="cream" data-i18n-title="tint_cream"><input type="radio" name="tint" value="cream" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="peach" data-i18n-title="tint_peach"><input type="radio" name="tint" value="peach" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="yellow" data-i18n-title="tint_yellow"><input type="radio" name="tint" value="yellow" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="green" data-i18n-title="tint_green"><input type="radio" name="tint" value="green" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="blue" data-i18n-title="tint_blue"><input type="radio" name="tint" value="blue" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="rose" data-i18n-title="tint_rose"><input type="radio" name="tint" value="rose" data-setting="tint" /><span></span></label>
+            <label class="swatch" data-tint="gray" data-i18n-title="tint_gray"><input type="radio" name="tint" value="gray" data-setting="tint" /><span></span></label>
+          </div>
+        </div>
+        <label class="control" data-hide-if="tint=none">
+          <span data-i18n="tintStrengthLabel">Tint strength</span>
+          <output data-output="tintStrength"></output>
+          <input type="range" min="10" max="80" step="5" data-setting="tintStrength" />
         </label>
       </section>
     </main>
@@ -67,6 +123,8 @@
 
     <script src="../shared/settings.js"></script>
     <script src="../content/bionic.js"></script>
+    <script src="../content/font-faces.js"></script>
+    <script src="../content/typography.js"></script>
     <script src="../ui/ui.js"></script>
     <script src="popup.js"></script>
   </body>

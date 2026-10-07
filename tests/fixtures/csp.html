@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Strict CSP page</title>
+    <link rel="stylesheet" href="/tests/fixtures/csp.css" />
+  </head>
+  <body>
+    <h1>Strict content security policy</h1>
+    <p id="csp-text">This page forbids inline styles, inline scripts and fonts from other origins. The extension must still be able to change fonts, draw its overlay and open the reader view.</p>
+    <p>Readers with ADHD benefit from a calm page. A second paragraph gives the reader view enough text to work with, and a third one makes the article long enough to count as an article.</p>
+    <p>Browsers apply the page's policy to the page's own resources; extension resources and constructable stylesheets are handled separately, which is what this test checks.</p>
+  </body>
+</html>
